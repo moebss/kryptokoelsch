@@ -38,18 +38,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const iframe = document.getElementById('luma-iframe');
 
     if (btnUpcoming && btnPast && iframe) {
+        const pastMsg = document.getElementById('past-events-msg');
+
         btnUpcoming.addEventListener('click', () => {
             btnUpcoming.classList.add('active');
             btnPast.classList.remove('active');
-            // Standard URL for upcoming
-            iframe.src = "https://lu.ma/embed/calendar/cal-By6C0aAuF3FgjeU/events";
+            // Show Iframe, Hide Msg
+            iframe.style.display = 'block';
+            pastMsg.style.display = 'none';
         });
 
         btnPast.addEventListener('click', () => {
             btnPast.classList.add('active');
             btnUpcoming.classList.remove('active');
-            // Append ?period=past for past events
-            iframe.src = "https://lu.ma/embed/calendar/cal-By6C0aAuF3FgjeU/events?period=past";
+            // Hide Iframe, Show Msg
+            iframe.style.display = 'none';
+            pastMsg.style.display = 'flex';
         });
     }
 });

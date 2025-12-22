@@ -322,6 +322,25 @@ h4 {
     font-size: 0.95rem;
 }
 
+/* Events Section / Luma Embed */
+.events-section {
+    background: linear-gradient(180deg, #fff 0%, #fcfaf2 100%);
+}
+
+.luma-embed-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--border-color);
+    background: #fff;
+}
+
+.luma-embed-wrapper iframe {
+    display: block;
+}
+
 /* CTA Section */
 .cta-box {
     background: linear-gradient(135deg, #fffcf5 0%, #fff 100%);

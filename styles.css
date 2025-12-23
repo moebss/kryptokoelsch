@@ -78,6 +78,9 @@ h4 {
     font-family: var(--font-heading);
     color: #000;
     text-decoration: none;
+    position: relative;
+    z-index: 200;
+    cursor: pointer;
 }
 
 .logo span {

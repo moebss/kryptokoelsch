@@ -156,10 +156,12 @@ h4 {
     justify-content: center;
     text-align: center;
     padding-top: 80px;
-    background-image: linear-gradient(rgba(252, 250, 242, 0.95), rgba(252, 250, 242, 0.92)), url('hero-bg.jpg');
+    background-image: linear-gradient(rgba(252, 250, 242, 0.85), rgba(252, 250, 242, 0.8)), url('hero-bg.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    position: relative;
+    /* Sicherstellen dass z-index greift falls nötig */
 }
 
 .hero h1 {

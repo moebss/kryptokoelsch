@@ -200,8 +200,9 @@ h4 {
     line-height: 1.1;
     margin-bottom: 24px;
     letter-spacing: -1px;
-    animation: fadeInUp 0.8s ease-out;
     color: #000;
+    opacity: 1 !important;
+    visibility: visible !important;
 }
 
 .hero .subtitle {
@@ -211,7 +212,8 @@ h4 {
     max-width: 600px;
     margin-left: auto;
     margin-right: auto;
-    animation: fadeInUp 1s ease-out 0.2s backwards;
+    opacity: 1 !important;
+    visibility: visible !important;
 }
 
 .cta-group {

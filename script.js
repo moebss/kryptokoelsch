@@ -43,17 +43,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Glowing Circle Parallax
-    const glowingCircle = document.querySelector('.glowing-circle');
-    if (glowingCircle) {
-        window.addEventListener('mousemove', (e) => {
-            const x = e.clientX / window.innerWidth;
-            const y = e.clientY / window.innerHeight;
-
-            glowingCircle.style.transform = `translate(${x * 30}px, ${y * 30}px)`;
-        });
-    }
-
     // Event Toggle Logic
     const btnUpcoming = document.getElementById('btn-upcoming');
     const btnPast = document.getElementById('btn-past');

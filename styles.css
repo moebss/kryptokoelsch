@@ -390,6 +390,45 @@ h4 {
     font-size: 0.95rem;
 }
 
+/* Partners Section */
+.partners-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.partner-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    padding: 40px 30px;
+    border-radius: 12px;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px var(--shadow-color);
+}
+
+.partner-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px rgba(255, 153, 0, 0.15);
+    border-color: var(--primary-color);
+}
+
+.partner-icon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+
+.partner-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    color: #000;
+}
+
+.partner-card p {
+    color: #666;
+    font-size: 0.9rem;
+}
 
 /* Toggle Buttons */
 .btn-toggle {

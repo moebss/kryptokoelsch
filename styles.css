@@ -190,12 +190,18 @@ h4 {
     overflow: hidden;
 }
 
+.hero-content {
+    position: relative;
+    z-index: 10;
+}
+
 .hero h1 {
     font-size: 4.5rem;
     line-height: 1.1;
     margin-bottom: 24px;
     letter-spacing: -1px;
     animation: fadeInUp 0.8s ease-out;
+    color: #000;
 }
 
 .hero .subtitle {

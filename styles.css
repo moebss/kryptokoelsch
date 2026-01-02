@@ -453,6 +453,19 @@ h4 {
     transform: scale(1.2) rotate(5deg);
 }
 
+/* Partner Logos */
+.partner-logo {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    margin-bottom: 20px;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.partner-card:hover .partner-logo {
+    transform: scale(1.1);
+}
+
 .partner-card h3 {
     font-size: 1.15rem;
     margin-bottom: 8px;

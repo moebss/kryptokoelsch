@@ -479,9 +479,9 @@ h4 {
     transform: scale(1.1);
 }
 
-/* White logos need to be inverted to be visible on white background */
-.partner-logo.invert-logo {
-    filter: invert(1) brightness(0.3);
+/* White logos need orange background to be visible */
+.partner-logo.orange-bg {
+    background: linear-gradient(135deg, #FF9900, #FFB84D);
 }
 
 .partner-card h3 {

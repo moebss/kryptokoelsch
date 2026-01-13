@@ -1,0 +1,61 @@
+/* ===========================
+   MOBILE STICKY CONTROLS
+   =========================== */
+
+.sticky-controls {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    z-index: 999;
+    pointer-events: none;
+    /* Let clicks pass through container */
+    display: none;
+    /* Hidden by default on desktop */
+    justify-content: center;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease;
+    transform: translateY(100px);
+    opacity: 0;
+}
+
+.sticky-controls.visible {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.btn-sticky-generate {
+    pointer-events: auto;
+    background: linear-gradient(135deg, #ffd700, #ffed4e);
+    color: #4a0404;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    font-weight: 800;
+    font-size: 1.1rem;
+    box-shadow: 0 10px 25px rgba(255, 215, 0, 0.4);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    width: 100%;
+    max-width: 350px;
+    justify-content: center;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+}
+
+.btn-sticky-generate:active {
+    transform: scale(0.95);
+}
+
+/* Show only on mobile/tablets when needed */
+@media (max-width: 768px) {
+    .sticky-controls {
+        display: flex;
+    }
+
+    /* Adjust if cookie banner is present */
+    body.has-cookie-banner .sticky-controls {
+        bottom: 90px;
+    }
+}

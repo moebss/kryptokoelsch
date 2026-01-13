@@ -1,0 +1,337 @@
+/* ===========================
+   GRUSSGENERATOR.DE PROMO
+   =========================== */
+
+.grussgenerator-promo {
+    background: linear-gradient(135deg, rgba(138, 43, 226, 0.1) 0%, rgba(75, 0, 130, 0.1) 100%);
+    border: 2px solid rgba(138, 43, 226, 0.3);
+    border-radius: 20px;
+    padding: 2.5rem;
+    margin-bottom: 2rem;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 2rem;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    animation: promo-glow 3s ease-in-out infinite;
+}
+
+@keyframes promo-glow {
+
+    0%,
+    100% {
+        box-shadow: 0 5px 20px rgba(138, 43, 226, 0.2);
+    }
+
+    50% {
+        box-shadow: 0 5px 40px rgba(138, 43, 226, 0.4);
+    }
+}
+
+.grussgenerator-promo::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(138, 43, 226, 0.1) 0%, transparent 70%);
+    animation: promo-rotate 20s linear infinite;
+}
+
+@keyframes promo-rotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.promo-content {
+    position: relative;
+    z-index: 1;
+}
+
+.promo-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #8a2be2, #4b0082);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    animation: badge-pulse 2s ease-in-out infinite;
+}
+
+@keyframes badge-pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+.promo-title {
+    font-size: 2rem;
+    margin: 0 0 1rem 0;
+    font-weight: 900;
+}
+
+.gradient-text {
+    background: linear-gradient(135deg, #8a2be2, #da70d6, #9370db);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradient-shift 3s ease-in-out infinite;
+    background-size: 200% 200%;
+}
+
+@keyframes gradient-shift {
+
+    0%,
+    100% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+}
+
+.promo-description {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.promo-features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 2rem 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.8rem;
+}
+
+.promo-features li {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.promo-features li:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(5px);
+}
+
+.promo-cta {
+    margin-top: 1.5rem;
+}
+
+.promo-early-access {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.promo-subscribe-form {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.promo-subscribe-form input {
+    flex: 1;
+    padding: 0.8rem 1.2rem;
+    border: 2px solid rgba(138, 43, 226, 0.3);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.promo-subscribe-form input:focus {
+    outline: none;
+    border-color: #8a2be2;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.btn-promo-subscribe {
+    padding: 0.8rem 1.5rem;
+    background: linear-gradient(135deg, #8a2be2, #9370db);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.btn-promo-subscribe:hover {
+    background: linear-gradient(135deg, #9370db, #8a2be2);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(138, 43, 226, 0.4);
+}
+
+.promo-success {
+    display: none;
+    background: rgba(0, 255, 136, 0.1);
+    border: 2px solid rgba(0, 255, 136, 0.3);
+    border-radius: 10px;
+    padding: 1rem;
+    text-align: center;
+    font-weight: 600;
+    color: #00ff88;
+}
+
+.promo-success.show {
+    display: block;
+    animation: slideDown 0.5s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.promo-visual {
+    position: relative;
+    z-index: 1;
+}
+
+.promo-image-placeholder {
+    background: linear-gradient(135deg, rgba(138, 43, 226, 0.2) 0%, rgba(75, 0, 130, 0.2) 100%);
+    border-radius: 15px;
+    padding: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 250px;
+}
+
+.promo-emoji-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    animation: emoji-float 3s ease-in-out infinite;
+}
+
+@keyframes emoji-float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.promo-emoji-grid span {
+    font-size: 3rem;
+    animation: emoji-rotate 4s ease-in-out infinite;
+}
+
+.promo-emoji-grid span:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.promo-emoji-grid span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.promo-emoji-grid span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+.promo-emoji-grid span:nth-child(4) {
+    animation-delay: 0.6s;
+}
+
+.promo-emoji-grid span:nth-child(5) {
+    animation-delay: 0.8s;
+}
+
+.promo-emoji-grid span:nth-child(6) {
+    animation-delay: 1s;
+}
+
+@keyframes emoji-rotate {
+
+    0%,
+    100% {
+        transform: rotate(0deg) scale(1);
+    }
+
+    50% {
+        transform: rotate(10deg) scale(1.1);
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .grussgenerator-promo {
+        grid-template-columns: 1fr;
+        padding: 1.5rem;
+        gap: 1.5rem;
+    }
+
+    .promo-title {
+        font-size: 1.5rem;
+    }
+
+    .promo-features {
+        grid-template-columns: 1fr;
+    }
+
+    .promo-subscribe-form {
+        flex-direction: column;
+    }
+
+    .promo-image-placeholder {
+        padding: 2rem;
+        min-height: 200px;
+    }
+
+    .promo-emoji-grid {
+        gap: 1rem;
+    }
+
+    .promo-emoji-grid span {
+        font-size: 2rem;
+    }
+}
+
+/* Dark Mode Support */
+body.dark-mode .grussgenerator-promo {
+    background: linear-gradient(135deg, rgba(138, 43, 226, 0.15) 0%, rgba(75, 0, 130, 0.15) 100%);
+    border-color: rgba(138, 43, 226, 0.4);
+}
+
+body.dark-mode .promo-subscribe-form input {
+    background: rgba(0, 0, 0, 0.3);
+}

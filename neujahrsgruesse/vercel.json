@@ -1,0 +1,28 @@
+{
+    "rewrites": [
+        {
+            "source": "/api/generate",
+            "destination": "/api/generate.js"
+        },
+        {
+            "source": "/api/check-limit",
+            "destination": "/api/check-limit.js"
+        },
+        {
+            "source": "/api/create-checkout",
+            "destination": "/api/create-checkout.js"
+        },
+        {
+            "source": "/api/subscribe",
+            "destination": "/api/subscribe.js"
+        },
+        {
+            "source": "/api/verify-payment",
+            "destination": "/api/verify-payment.js"
+        },
+        {
+            "source": "/api/webhook",
+            "destination": "/api/webhook.js"
+        }
+    ]
+}

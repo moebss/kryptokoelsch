@@ -1,0 +1,22 @@
+{
+  "name": "neujahrsgruesse",
+  "version": "2.0.0",
+  "description": "AI-powered New Year's greetings generator with Freemium monetization",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'No build step required'"
+  },
+  "dependencies": {
+    "stripe": "^14.10.0"
+  },
+  "devDependencies": {},
+  "keywords": [
+    "new-year",
+    "greetings",
+    "ai",
+    "freemium"
+  ],
+  "author": "Alexander Rheindorf",
+  "license": "MIT"
+}

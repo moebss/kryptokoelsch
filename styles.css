@@ -241,6 +241,28 @@ h4 {
     animation: pulse 4s ease-in-out infinite;
 }
 
+/* Hero Logo */
+.hero-logo {
+    width: 350px;
+    height: 350px;
+    object-fit: contain;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(255, 153, 0, 0.3);
+    animation: float 4s ease-in-out infinite;
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    50% {
+        transform: translateY(-15px) rotate(2deg);
+    }
+}
+
 @keyframes pulse {
 
     0%,

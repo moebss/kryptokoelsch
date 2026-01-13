@@ -469,20 +469,17 @@ h4 {
     object-fit: contain;
     margin-bottom: 20px;
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    background: #ffffff;
+    background: linear-gradient(135deg, #FF9900, #FFB84D);
     padding: 12px;
     border-radius: 50%;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 15px rgba(255, 153, 0, 0.3);
 }
 
 .partner-card:hover .partner-logo {
     transform: scale(1.1);
 }
 
-/* White logos need orange background to be visible */
-.partner-logo.orange-bg {
-    background: linear-gradient(135deg, #FF9900, #FFB84D);
-}
+
 
 .partner-card h3 {
     font-size: 1.15rem;

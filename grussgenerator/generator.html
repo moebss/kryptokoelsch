@@ -4,20 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grussgenerator.de | KI Grußkarten kostenlos erstellen & teilen 🎉</title>
+    <title>Grussgenerator.de | KI-Grüße für jeden Anlass 🎉</title>
     <meta name="description"
-        content="Erstelle in Sekunden persönliche, KI-generierte Grüße & digitale Grußkarten. Kostenlos für Geburtstag, Hochzeit, Weihnachten & mehr. Jetzt ausprobieren!">
+        content="Erstelle in Sekunden persönliche Grüße mit KI! Geburtstag, Hochzeit, Weihnachten - kostenlos & viral. Über 10.000+ Grüße erstellt!">
 
     <!-- SEO -->
     <meta name="keywords"
-        content="Grußgenerator, KI Grüße, Geburtstagswünsche, Hochzeitsglückwünsche, digitale Grußkarten, KI Texter, Glückwünsche kostenlos, WhatsApp Grüße">
-    <link rel="canonical" href="https://grussgenerator.de/">
+        content="Grußgenerator, KI Grüße, Geburtstagswünsche, Hochzeitsglückwünsche, kostenlos, viral">
+    <link rel="canonical" href="https://grussgenerator.de/generator.html">
 
     <!-- Open Graph -->
     <meta property="og:title" content="Grussgenerator.de | Der virale Gruß-Generator 🎉">
     <meta property="og:description" content="Erstelle in Sekunden persönliche Grüße mit KI! Kostenlos & viral.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://grussgenerator.de/">
+    <meta property="og:url" content="https://grussgenerator.de/generator.html">
     <meta property="og:image" content="https://grussgenerator.de/og-image.png">
 
     <!-- Fonts -->
@@ -27,47 +27,8 @@
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Caveat:wght@400;700&family=Pacifico&family=Dancing+Script:wght@400;700&family=Satisfy&family=Great+Vibes&family=Amatic+SC:wght@400;700&family=Permanent+Marker&family=Playfair+Display:wght@400;700&family=Indie+Flower&family=Kalam:wght@400;700&family=Comic+Neue:wght@400;700&family=Lobster&family=Sacramento&family=Shadows+Into+Light&family=Fredericka+the+Great&family=Patrick+Hand&display=swap"
         rel="stylesheet">
 
-    <!-- Localization HREFLANG (SEO for languages) -->
-    <link rel="alternate" hreflang="de" href="https://grussgenerator.de/">
-    <link rel="alternate" hreflang="en" href="https://grussgenerator.de/?lang=en">
-    <link rel="alternate" hreflang="es" href="https://grussgenerator.de/?lang=es">
-    <link rel="alternate" hreflang="fr" href="https://grussgenerator.de/?lang=fr">
-    <link rel="alternate" hreflang="it" href="https://grussgenerator.de/?lang=it">
-    <link rel="alternate" hreflang="tr" href="https://grussgenerator.de/?lang=tr">
-    <link rel="alternate" hreflang="x-default" href="https://grussgenerator.de/">
-
     <!-- Favicon -->
     <link rel="icon" href="assets/favicon.png" type="image/png">
-
-    <!-- JSON-LD SEO Schema -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "Grussgenerator.de",
-      "alternateName": "KI Grußkarten Generator",
-      "description": "Erstelle in Sekunden persönliche, KI-generierte Grüße und digitale Grußkarten für jeden Anlass wie Geburtstag, Hochzeit oder Weihnachten.",
-      "url": "https://grussgenerator.de",
-      "applicationCategory": "MultimediaApplication",
-      "operatingSystem": "All",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "EUR"
-      },
-      "featureList": [
-        "KI-basierte Texterstellung",
-        "Personalisierbare Grußkarten",
-        "Mehrsprachige Unterstützung (DE, EN, ES, FR, TR, IT)",
-        "Social Media Sharing (WhatsApp, Telegram, X)",
-        "Sticker und individuelles Design"
-      ],
-      "author": {
-        "@type": "Person",
-        "name": "Alexander Rheindorf"
-      }
-    }
-    </script>
 
     <link rel="stylesheet" href="assets/css/cookie-consent.css">
     <script src="assets/js/cookie-consent.js" defer></script>
@@ -120,17 +81,16 @@
         <header class="header">
             <a href="index.html" class="logo">
                 <img src="assets/favicon.png" alt="Logo" class="brand-icon">
-                <div class="logo-content">
-                    <h1 class="logo-text">grussgenerator.de</h1>
-                    <span class="tagline" data-i18n="tagline">Der perfekte Text für jeden Anlass</span>
-                </div>
+                <span class="logo-text">grussgenerator.de</span>
+                <span class="logo-divider">|</span>
+                <span class="tagline" data-i18n="tagline">Der perfekte Text für jeden Anlass</span>
             </a>
         </header>
 
         <main class="main-content">
             <!-- Input Section -->
             <section class="card glass input-section" id="inputSection">
-                <h2 data-i18n="form-title" class="section-title">✨ Erstelle deinen Gruß</h2>
+                <h2 data-i18n="form-title">✨ Erstelle deinen Gruß</h2>
 
 
 
@@ -470,8 +430,8 @@
                     <div class="card-center">
                         <div class="greeting-card-wrapper">
                             <div class="greeting-card" id="greetingCard" data-mood="default">
-                                <!-- Decorations Container -->
-                                <div id="cardDecorations" class="card-decorations"></div>
+                                <!-- Large Anti-Screenshot Watermark -->
+                                <div class="bg-watermark">grussgenerator.de</div>
 
                                 <!-- Placed Stickers Container -->
                                 <div class="placed-stickers" id="placedStickers"></div>
@@ -519,6 +479,10 @@
 
                                 <!-- Zufall Section -->
                                 <div class="remix-section">
+                                    <div id="supabaseMoods" class="mood-grid-compact"
+                                        style="margin-top: 15px; border-top: 1px solid rgba(0,0,0,0.05); padding-top: 15px;">
+                                        <!-- Supabase Moods will be loaded here -->
+                                    </div>
                                     <button class="btn-remix" id="remixBtn">
                                         🎲 Zufall
                                     </button>
@@ -689,54 +653,6 @@
                 </div>
             </section>
         </main>
-
-        <!-- SEO Content Section -->
-        <section class="seo-section card glass">
-            <div class="seo-content">
-                <h2>Warum den KI Grußgenerator nutzen?</h2>
-                <p>Der <strong>Grussgenerator.de</strong> ist dein ultimatives Tool, um in Sekunden herzliche, lustige
-                    oder professionelle Grüße zu erstellen. Egal ob du Glückwünsche zum Geburtstag suchst, eine
-                    romantische Nachricht zur Hochzeit verfassen möchtest oder festliche Weihnachtsgrüße benötigst –
-                    unsere künstliche Intelligenz findet immer die richtigen Worte.</p>
-
-                <div class="seo-grid">
-                    <div class="seo-card">
-                        <h3>🎂 Geburtstagswünsche</h3>
-                        <p>Von lustigen Sprüchen bis hin zu tiefgründigen Weisheiten. Personalisiere deine Wünsche mit
-                            dem Namen des Geburtstagskindes.</p>
-                    </div>
-                    <div class="seo-card">
-                        <h3>💍 Hochzeit & Jubiläum</h3>
-                        <p>Finde elegante und emotionale Worte für den schönsten Tag im Leben. Ideal für Karten, Reden
-                            oder WhatsApp-Grüße.</p>
-                    </div>
-                    <div class="seo-card">
-                        <h3>🎄 Festtage & Feiertage</h3>
-                        <p>Ob Weihnachten, Neujahr, Ostern oder Muttertag – verbreite Freude mit einzigartigen digitalen
-                            Grußkarten.</p>
-                    </div>
-                </div>
-
-                <h3>Häufig gestellte Fragen (FAQ)</h3>
-                <div class="seo-faq">
-                    <div class="faq-item">
-                        <strong>Ist der Grußgenerator kostenlos?</strong>
-                        <p>Ja, Grussgenerator.de ist zu 100% kostenlos nutzbar. Du kannst so viele Grüße generieren und
-                            teilen, wie du möchtest.</p>
-                    </div>
-                    <div class="faq-item">
-                        <strong>Wie funktioniert die KI-Erstellung?</strong>
-                        <p>Unsere KI analysiert deine Angaben zu Anlass, Beziehung und Tonalität, um einen
-                            maßgeschneiderten Text zu kreieren, der genau auf deine Bedürfnisse zugeschnitten ist.</p>
-                    </div>
-                    <div class="faq-item">
-                        <strong>Kann ich die Grüße als Bild speichern?</strong>
-                        <p>Absolut! Du kannst dein Design direkt als hochwertiges Bild (JPG/PNG) herunterladen oder über
-                            WhatsApp und Social Media teilen.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
 
         <!-- Footer -->
         <footer class="footer">

@@ -2,12 +2,7 @@
     "name": "grussgenerator-landingpage",
     "version": "1.0.0",
     "description": "Premium Landingpage for grussgenerator.de",
-    "main": "index.html",
     "scripts": {
-        "dev": "npx servor",
-        "build": "echo 'No build step'"
-    },
-    "dependencies": {
-        "@vercel/og": "^0.6.0"
+        "build": "echo 'Static build only'"
     }
 }

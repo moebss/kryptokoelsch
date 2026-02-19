@@ -9,11 +9,29 @@ const MAX_HISTORY = 5;
 const STATS_KEY = 'grussgenerator_stats';
 
 // --- State ---
-let currentLanguage = 'de';
+// Auto-detect browser language, default to English for unsupported languages
+const SUPPORTED_LANGS = ['de', 'en', 'es', 'fr', 'tr', 'it'];
+function detectLanguage() {
+    const stored = localStorage.getItem('grussgenerator_lang');
+    if (stored && SUPPORTED_LANGS.includes(stored)) return stored;
+    const browserLang = (navigator.language || navigator.userLanguage || 'en').toLowerCase().split('-')[0];
+    return SUPPORTED_LANGS.includes(browserLang) ? browserLang : 'en';
+}
+let currentLanguage = detectLanguage();
 let currentOccasion = 'birthday';
 let currentCardTheme = 'gradient';
 let soundEnabled = true;
 let totalGreetings = 12847; // Starting number for social proof
+
+// --- i18n Helper ---
+function getTranslation(key) {
+    const t = window.uiTranslations && window.uiTranslations[currentLanguage];
+    if (t && t[key]) return t[key];
+    // Fallback to English, then to the key itself
+    const en = window.uiTranslations && window.uiTranslations['en'];
+    if (en && en[key]) return en[key];
+    return key;
+}
 
 // --- DOM Elements ---
 const greetingForm = document.getElementById('greetingForm');
@@ -21,6 +39,14 @@ const generateBtn = document.getElementById('generateBtn');
 const inputSection = document.getElementById('inputSection');
 const outputSection = document.getElementById('outputSection');
 const generatedMessage = document.getElementById('generatedMessage');
+
+// ── GA Event Helper ──
+function trackEvent(eventName, params = {}) {
+    if (typeof gtag === 'function') {
+        gtag('event', eventName, params);
+        console.log(`[GA] ${eventName}`, params);
+    }
+}
 const historyToggle = document.getElementById('historyToggle');
 const historyContent = document.getElementById('historyContent');
 const historyList = document.getElementById('historyList');
@@ -470,9 +496,10 @@ if (greetingCard) {
 // Drag functionality
 let currentDrag = null;
 let dragOffset = { x: 0, y: 0 };
+let rAFSticker = null; // Animation frame ID
 
 function startDrag(e) {
-    e.preventDefault();
+    if (e.cancelable) e.preventDefault(); // Prevent scroll on touch
 
     // Ignore if clicking resize handle
     if (e.target.classList.contains('sticker-resize-handle')) return;
@@ -485,7 +512,7 @@ function startDrag(e) {
     currentDrag.classList.add('dragging');
 
     const rect = currentDrag.getBoundingClientRect();
-    const cardRect = greetingCard.getBoundingClientRect();
+    // Use client coordinates directly
     const clientX = e.clientX || e.touches[0].clientX;
     const clientY = e.clientY || e.touches[0].clientY;
 
@@ -494,22 +521,35 @@ function startDrag(e) {
 
     document.addEventListener('mousemove', drag);
     document.addEventListener('mouseup', stopDrag);
-    document.addEventListener('touchmove', drag);
+    document.addEventListener('touchmove', drag, { passive: false });
     document.addEventListener('touchend', stopDrag);
+    document.addEventListener('touchcancel', stopDrag); // Handle cancellation
 }
 
 function drag(e) {
     if (!currentDrag) return;
+    if (e.cancelable) e.preventDefault(); // Stop scrolling
 
-    const cardRect = greetingCard.getBoundingClientRect();
     const clientX = e.clientX || e.touches[0].clientX;
     const clientY = e.clientY || e.touches[0].clientY;
 
-    const x = ((clientX - cardRect.left - dragOffset.x) / cardRect.width) * 100;
-    const y = ((clientY - cardRect.top - dragOffset.y) / cardRect.height) * 100;
+    if (rAFSticker) return; // Skip if frame pending
 
-    currentDrag.style.left = Math.max(0, Math.min(90, x)) + '%';
-    currentDrag.style.top = Math.max(0, Math.min(90, y)) + '%';
+    rAFSticker = requestAnimationFrame(() => {
+        if (!currentDrag) return;
+
+        const cardRect = greetingCard.getBoundingClientRect();
+
+        // Calculate percentages
+        const x = ((clientX - cardRect.left - dragOffset.x) / cardRect.width) * 100;
+        const y = ((clientY - cardRect.top - dragOffset.y) / cardRect.height) * 100;
+
+        // Apply with limits
+        currentDrag.style.left = Math.max(-10, Math.min(100, x)) + '%';
+        currentDrag.style.top = Math.max(-10, Math.min(100, y)) + '%';
+
+        rAFSticker = null;
+    });
 }
 
 function stopDrag() {
@@ -517,10 +557,16 @@ function stopDrag() {
         currentDrag.classList.remove('dragging');
         currentDrag = null;
     }
+    if (rAFSticker) {
+        cancelAnimationFrame(rAFSticker);
+        rAFSticker = null;
+    }
+
     document.removeEventListener('mousemove', drag);
     document.removeEventListener('mouseup', stopDrag);
     document.removeEventListener('touchmove', drag);
     document.removeEventListener('touchend', stopDrag);
+    document.removeEventListener('touchcancel', stopDrag);
 }
 
 // Clear all stickers
@@ -585,14 +631,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
 const DRAG_THRESHOLD = 5; // Pixels to move before drag starts
 let isDraggingActive = false;
+let rAFText = null;
 
 function startTextDrag(e, element) {
     if (textDrag) return; // Already capturing
-    // e.preventDefault(); // Don't prevent default immediately, let click bubbles happen if it's just a tap
-    // e.stopPropagation();
+
+    // Explicitly prevent default on touch to avoid scroll interference
+    // This makes the text "stick" to the finger immediately
+    if (e.type === 'touchstart') {
+        // e.preventDefault(); // Uncommenting this ensures no scroll, but might block taps?
+        // Let's rely on touchmove prevention
+    }
 
     textDrag = element;
-    // Note: Don't add .is-dragging yet! Wait for movement.
 
     // Get start coordinates
     const clientX = e.clientX || e.touches[0].clientX;
@@ -607,11 +658,15 @@ function startTextDrag(e, element) {
     document.addEventListener('mouseup', stopTextDrag);
     document.addEventListener('touchmove', dragText, { passive: false });
     document.addEventListener('touchend', stopTextDrag);
+    document.addEventListener('touchcancel', stopTextDrag);
     document.addEventListener('mouseleave', stopTextDrag); // Safety catch
 }
 
 function dragText(e) {
     if (!textDrag) return;
+
+    // Prevent scrolling if we are dragging
+    if (e.cancelable) e.preventDefault();
 
     const clientX = e.clientX || e.touches[0].clientX;
     const clientY = e.clientY || e.touches[0].clientY;
@@ -630,32 +685,41 @@ function dragText(e) {
         document.body.style.cursor = 'grabbing';
     }
 
-    // Now responsible for events
-    if (e.cancelable) e.preventDefault();
-    e.stopPropagation();
+    if (rAFText) return;
 
-    // Calculate new position
-    let newX = translateStart.x + deltaX;
-    let newY = translateStart.y + deltaY;
+    rAFText = requestAnimationFrame(() => {
+        if (!textDrag) return;
 
-    // Boundary check (relaxed)
-    const card = document.getElementById('greetingCard');
-    if (card) {
-        const cardRect = card.getBoundingClientRect();
-        const limitX = cardRect.width * 0.48; // Almost 50%
-        const limitY = cardRect.height * 0.48;
+        // Calculate new position
+        let newX = translateStart.x + deltaX;
+        let newY = translateStart.y + deltaY;
 
-        newX = Math.max(-limitX, Math.min(limitX, newX));
-        newY = Math.max(-limitY, Math.min(limitY, newY));
-    }
+        // Boundary check (relaxed)
+        const card = document.getElementById('greetingCard');
+        if (card) {
+            const cardRect = card.getBoundingClientRect();
+            const limitX = cardRect.width * 0.48; // Almost 50%
+            const limitY = cardRect.height * 0.48;
 
-    // Update state and visual
-    currentTranslate = { x: newX, y: newY };
-    textDrag.style.transform = `translate(${newX}px, ${newY}px)`;
+            newX = Math.max(-limitX, Math.min(limitX, newX));
+            newY = Math.max(-limitY, Math.min(limitY, newY));
+        }
+
+        // Update state and visual
+        currentTranslate = { x: newX, y: newY };
+        textDrag.style.transform = `translate(${newX}px, ${newY}px)`;
+
+        rAFText = null;
+    });
 }
 
 function stopTextDrag() {
     if (!textDrag) return;
+
+    if (rAFText) {
+        cancelAnimationFrame(rAFText);
+        rAFText = null;
+    }
 
     textDrag.classList.remove('is-dragging');
     textDrag = null;
@@ -665,6 +729,7 @@ function stopTextDrag() {
     document.removeEventListener('mouseup', stopTextDrag);
     document.removeEventListener('touchmove', dragText);
     document.removeEventListener('touchend', stopTextDrag);
+    document.removeEventListener('touchcancel', stopTextDrag);
     document.removeEventListener('mouseleave', stopTextDrag);
 
     console.log('Drag end', currentTranslate);
@@ -862,7 +927,7 @@ document.querySelectorAll('.design-tab-btn').forEach(tab => {
 // REMIX FEATURE (Supabase Storage)
 // ===========================
 const REMIX_API_ENDPOINT = '/api/get-random-card';
-const TOTAL_MOODS = 14;
+const TOTAL_MOODS = 27;
 
 const remixBtn = document.getElementById('remixBtn');
 const remixAgainBtn = document.getElementById('remixAgainBtn');
@@ -1138,6 +1203,7 @@ document.querySelectorAll('.lang-btn').forEach(btn => {
         document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         currentLanguage = btn.dataset.lang;
+        localStorage.setItem('grussgenerator_lang', currentLanguage);
         playSound(clickSound);
         if (typeof applyTranslations === 'function') {
             applyTranslations(currentLanguage);
@@ -1252,7 +1318,7 @@ greetingForm.addEventListener('submit', async (e) => {
     const tone = document.getElementById('tone').value;
 
     if (!name || !relation) {
-        showToast('Bitte fülle alle Pflichtfelder aus! ⚠️', 'error');
+        showToast(getTranslation('toast-fields-required'), 'error');
         return;
     }
 
@@ -1300,6 +1366,9 @@ greetingForm.addEventListener('submit', async (e) => {
         inputSection.classList.add('hidden');
         outputSection.classList.remove('hidden');
 
+        // Track card creation
+        trackEvent('card_created', { occasion: currentOccasion, language: currentLanguage });
+
         // Update card themes for this occasion
         renderOccasionThemes(currentOccasion);
 
@@ -1317,12 +1386,12 @@ greetingForm.addEventListener('submit', async (e) => {
 
         // Success feedback
         playSound(successSound);
-        showToast('Gruß erfolgreich generiert! 🎉', 'success');
+        showToast(getTranslation('toast-generated'), 'success');
         launchConfetti();
 
     } catch (err) {
         console.error('Generation error:', err);
-        showToast(`Fehler: ${err.message} 😞`, 'error');
+        showToast(`${getTranslation('toast-error')} ${err.message} 😞`, 'error');
     } finally {
         generateBtn.disabled = false;
         generateBtn.querySelector('.btn-text').classList.remove('hidden');
@@ -1442,7 +1511,7 @@ function renderHistory(history) {
                     item.classList.add('active');
 
                     playSound(clickSound);
-                    showToast('Gruß geladen! 📜', 'info');
+                    showToast(getTranslation('toast-history-loaded'), 'info');
                 });
             });
         }
@@ -1463,7 +1532,7 @@ document.querySelectorAll('.reaction-btn').forEach(btn => {
         document.querySelectorAll('.reaction-btn').forEach(b => b.classList.remove('selected'));
         btn.classList.add('selected');
         playSound(successSound);
-        showToast('Danke für dein Feedback! ❤️', 'success');
+        showToast(getTranslation('toast-feedback'), 'success');
     });
 });
 
@@ -1474,12 +1543,13 @@ document.querySelectorAll('.reaction-btn').forEach(btn => {
 // Copy to clipboard
 // Copy to clipboard
 document.getElementById('copyBtn')?.addEventListener('click', () => {
+    trackEvent('card_copied');
     navigator.clipboard.writeText(generatedMessage.textContent)
         .then(() => {
             playSound(clickSound);
-            showToast('Text kopiert! 📋', 'success');
+            showToast(getTranslation('toast-copied'), 'success');
         })
-        .catch(() => showToast('Kopieren fehlgeschlagen 😞', 'error'));
+        .catch(() => showToast(getTranslation('toast-copy-fail'), 'error'));
 });
 
 // ===========================
@@ -1571,7 +1641,7 @@ async function shareCardAsImage(platform) {
 
     try {
         playSound(clickSound);
-        showToast(`Bereite Bild für ${platform} vor... 📤`, 'info');
+        showToast(getTranslation('toast-share-prep'), 'info');
 
         // Capture as Blob
         const { blob, dataUrl } = await generateCardBlob();
@@ -1585,7 +1655,7 @@ async function shareCardAsImage(platform) {
                 text: 'Schau mal, was ich gerade erstellt habe! 💌 grussgenerator.de'
             });
             playSound(successSound);
-            showToast('Erfolgreich geteilt! 🎉', 'success');
+            showToast(getTranslation('toast-share-success'), 'success');
             return true;
         }
 
@@ -1594,7 +1664,7 @@ async function shareCardAsImage(platform) {
     } catch (error) {
         if (error.name !== 'AbortError') {
             console.error('Sharing Error:', error);
-            showToast(`Teilen fehlgeschlagen: ${error.message}`, 'error');
+            showToast(`${getTranslation('toast-share-fail')}: ${error.message}`, 'error');
         }
         return false;
     }
@@ -1609,7 +1679,7 @@ document.getElementById('downloadBtn').addEventListener('click', async () => {
 
     try {
         playSound(clickSound);
-        showToast('Wird erstellt (1080x1080)... 📸', 'info');
+        showToast(getTranslation('toast-download-prep'), 'info');
 
         // Create 1080p JPEG
         const dataUrl = await captureCard('jpeg', 1080);
@@ -1623,7 +1693,8 @@ document.getElementById('downloadBtn').addEventListener('click', async () => {
         document.body.removeChild(link);
 
         playSound(successSound);
-        showToast('Bild gespeichert! 🎉', 'success');
+        showToast(getTranslation('toast-download-success'), 'success');
+        trackEvent('card_downloaded', { format: 'jpeg' });
     } catch (error) {
         console.error('Download Error:', error);
         alert('Fehler: ' + error.message);
@@ -1637,6 +1708,7 @@ function isMobileDevice() {
 
 // WhatsApp share - try image, fallback to text
 document.getElementById('whatsappBtn')?.addEventListener('click', async () => {
+    trackEvent('card_shared', { platform: 'whatsapp' });
     const shared = await shareCardAsImage('WhatsApp');
     if (!shared) {
         const text = encodeURIComponent(generatedMessage.textContent + '\n\n💌 Erstellt mit grussgenerator.de');
@@ -1657,6 +1729,7 @@ document.getElementById('whatsappBtn')?.addEventListener('click', async () => {
 
 // Twitter share - try image, fallback to text
 document.getElementById('twitterBtn')?.addEventListener('click', async () => {
+    trackEvent('card_shared', { platform: 'twitter' });
     // Twitter doesn't support direct image sharing via web intent well, mostly text/url
     // We prioritize text share for Twitter
     const text = encodeURIComponent('Gerade einen tollen Gruß erstellt! 💌\n\n' + generatedMessage.textContent.substring(0, 100) + '...\n\nProbiere es selbst: https://grussgenerator.de');
@@ -1665,6 +1738,7 @@ document.getElementById('twitterBtn')?.addEventListener('click', async () => {
 
 // Telegram share - try image, fallback to text
 document.getElementById('telegramBtn')?.addEventListener('click', async () => {
+    trackEvent('card_shared', { platform: 'telegram' });
     const shared = await shareCardAsImage('Telegram');
     if (!shared) {
         const text = encodeURIComponent(generatedMessage.textContent + '\n\n💌 Erstellt mit https://grussgenerator.de');
@@ -1681,7 +1755,7 @@ document.getElementById('telegramBtn')?.addEventListener('click', async () => {
 // ===========================
 // MOOD MANAGER (Refactored)
 // ===========================
-const STATIC_MOOD_COUNT = 24;
+const STATIC_MOOD_COUNT = 27;
 
 function renderStaticMoods() {
     // We target a specific container now (if present), or fall back to finding where to insert
@@ -1734,6 +1808,7 @@ function renderStaticMoods() {
 function handleMoodSelection(btn) {
     // Visual feedback
     document.querySelectorAll('.mood-emoji').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
 
     const mood = btn.dataset.mood;
@@ -1745,25 +1820,22 @@ function handleMoodSelection(btn) {
 
         // Handle Supabase/Community vs Static
         if (mood === 'supabase') {
-            // handled in specific listener, but we can unify here if passed correctly
-            // The supabase logic is separate below, we leave it for now or integrate?
-            // Let's leave Supabase logic as is for now to minimize risk, 
-            // this function mainly handles static moods.
+            // Supabase logic is handled in the separate listener below
         } else {
             // Static Mood (mood-1 to mood-24)
-            // Apply background image directly (replacing CSS rules)
+            // Use cardCustomBg <img> element for reliable layering (same as Supabase moods)
             const moodId = mood.replace('mood-', ''); // 1..24
-            greetingCard.style.backgroundImage = `url('assets/templates/mood${moodId}.jpg')`;
-            greetingCard.style.backgroundSize = '100% 100%';
-            greetingCard.style.backgroundPosition = 'center';
-            greetingCard.style.backgroundRepeat = 'no-repeat';
+            const imgUrl = `assets/templates/mood${moodId}.jpg`;
 
-            // Clear custom bg element if visible
             const customBg = document.getElementById('cardCustomBg');
             if (customBg) {
-                customBg.classList.add('hidden');
-                customBg.removeAttribute('src');
+                customBg.src = imgUrl;
+                customBg.classList.remove('hidden');
             }
+
+            // Also set inline background as fallback (for image export)
+            greetingCard.style.background = `url('${imgUrl}') center / 100% 100% no-repeat`;
+
             greetingCard.classList.remove('has-custom-bg');
         }
     }
@@ -1855,6 +1927,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Facebook share - try image, fallback to link
 document.getElementById('facebookBtn')?.addEventListener('click', async () => {
+    trackEvent('card_shared', { platform: 'facebook' });
     const shared = await shareCardAsImage('Facebook');
     if (!shared && !navigator.canShare) {
         window.open('https://www.facebook.com/sharer/sharer.php?u=https://grussgenerator.de', '_blank');
@@ -1906,7 +1979,7 @@ stickerUpload?.addEventListener('change', (e) => {
     const file = e.target.files[0];
     if (file) {
         if (stickerCount >= 15) {
-            showToast('Zu viele Elemente auf der Karte!', 'warning');
+            showToast(getTranslation('toast-too-many'), 'warning');
             return;
         }
 
@@ -1958,7 +2031,7 @@ stickerUpload?.addEventListener('change', (e) => {
             placedStickers?.appendChild(wrapper);
             stickerCount++;
             playSound(successSound);
-            showToast('Bild hinzugefügt! Ziehe an der Ecke zum Skalieren. 📐', 'success');
+            showToast(getTranslation('toast-image-added'), 'success');
         };
         reader.readAsDataURL(file);
 
@@ -2051,7 +2124,7 @@ function initUrlParameters() {
     }
 
     // Show Toast
-    showToast('Daten aus Link geladen! ✨', 'success');
+    showToast(getTranslation('toast-link-loaded'), 'success');
 
     // Optional: Auto-generate if all fields are present?
     // for now, let the user click to be safe.
@@ -2077,7 +2150,10 @@ document.addEventListener('DOMContentLoaded', () => {
     updateLiveCounter();
     initUrlParameters(); // Check for URL params
 
-    // Apply initial language
+    // Apply initial language (auto-detected or stored)
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+    const activeLangBtn = document.querySelector(`.lang-btn[data-lang="${currentLanguage}"]`);
+    if (activeLangBtn) activeLangBtn.classList.add('active');
     if (typeof applyTranslations === 'function') {
         applyTranslations(currentLanguage);
     }

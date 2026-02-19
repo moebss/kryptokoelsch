@@ -4,7 +4,8 @@
     "description": "Premium Landingpage for grussgenerator.de",
     "main": "index.html",
     "scripts": {
-        "dev": "npx servor"
+        "dev": "npx servor",
+        "build": "echo 'No build step'"
     },
     "dependencies": {
         "@vercel/og": "^0.6.0"

@@ -1,8 +1,0 @@
-{
-    "name": "grussgenerator-landingpage",
-    "version": "1.0.0",
-    "description": "Premium Landingpage for grussgenerator.de",
-    "scripts": {
-        "build": "echo 'Static build only'"
-    }
-}

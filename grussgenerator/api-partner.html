@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Greeting Card Engine für Shops | Grussgenerator.de – KI-Grußkarten per API</title>
+    <meta name="description"
+        content="Komplette KI-Grußkarten-Engine: Text + fertige Kartenbilder. 27 Designs, 15 Anlässe, 7 Sprachen. Live Demo testen!">
+    <link rel="canonical" href="https://grussgenerator.de/api-partner.html">
+    <meta property="og:title" content="Greeting Card Engine | Grussgenerator.de">
+    <meta property="og:description" content="KI-Grußkarten per API: Text + fertige Kartenbilder mit 27 Designvorlagen.">
+    <meta property="og:type" content="website">
+    <link href="https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&display=swap"
+        rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;900&family=Caveat:wght@400;700&family=Pacifico&family=Dancing+Script:wght@400;700&family=Satisfy&family=Great+Vibes&family=Amatic+SC:wght@400;700&family=Permanent+Marker&family=Playfair+Display:wght@400;700&family=Indie+Flower&family=Kalam:wght@400;700&family=Comic+Neue:wght@400;700&family=Lobster&family=Sacramento&family=Shadows+Into+Light&family=Fredericka+the+Great&family=Patrick+Hand&display=swap"
+        rel="stylesheet">
+    <link rel="icon" href="assets/favicon.png" type="image/png">
+    <link rel="stylesheet" href="partner.css?v=3">
+</head>
+
+<body>
+    <!-- Aurora Background (from generator.css) -->
+    <div class="aurora-background">
+        <div class="aurora-blob blob-1"></div>
+        <div class="aurora-blob blob-2"></div>
+        <div class="aurora-blob blob-3"></div>
+    </div>
+
+    <!-- Nav -->
+    <nav class="nav" id="mainNav">
+        <div class="container">
+            <a href="index.html" class="nav-brand">✨ <span>grussgenerator</span>.de</a>
+            <div class="nav-right">
+                <ul class="nav-links" id="navLinksLanding">
+                    <li><a href="#demo">Live Demo</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#pricing">Preise</a></li>
+                </ul>
+                <div id="navUser" class="nav-user hidden">
+                    <img id="navAvatar" class="nav-avatar" src="" alt="">
+                    <span id="navName"></span>
+                    <button id="logoutBtn" class="nav-logout">Logout</button>
+                </div>
+                <button id="loginBtnNav" class="nav-cta">🔐 Login</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ========== VIEW 1: LANDING PAGE ========== -->
+    <div id="viewLanding">
+
+        <!-- Hero -->
+        <section class="hero">
+            <div class="container">
+                <div class="hero-badge">
+                    <div class="dot"></div> Live – Jetzt testen
+                </div>
+                <h1>KI-Grußkarten-Engine<br>für <span class="gradient">Ihren Online-Shop</span></h1>
+                <p class="hero-sub">Text + fertige Kartenbilder per API – in unter einer Stunde integriert. 27 Designs,
+                    15 Anlässe, 7 Sprachen.</p>
+                <div class="btn-group">
+                    <a href="#demo" class="btn btn-primary">🚀 Live Demo testen</a>
+                    <button id="loginBtnHero" class="btn btn-outline">🔐 Kostenlos starten</button>
+                </div>
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <div class="hero-stat-num">27</div>
+                        <div class="hero-stat-label">Card Designs</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-num">15</div>
+                        <div class="hero-stat-label">Anlässe</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-num">7</div>
+                        <div class="hero-stat-label">Sprachen</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-num">&lt;2s</div>
+                        <div class="hero-stat-label">Antwortzeit</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Live Demo -->
+        <section id="demo">
+            <div class="container">
+                <div class="section-header">
+                    <div class="section-tag">Live Demo</div>
+                    <h2>Testen Sie es selbst</h2>
+                    <p>Füllen Sie das Formular aus – die KI generiert in Echtzeit einen persönlichen Grußtext +
+                        Kartenvorschau.</p>
+                </div>
+                <div class="demo-card">
+                    <div class="demo-header">⚡ API Live-Tester</div>
+                    <div class="demo-body">
+                        <div class="demo-form">
+                            <div class="form-group">
+                                <label>Name</label>
+                                <input type="text" id="demoName" value="Maria" placeholder="z.B. Maria">
+                            </div>
+                            <div class="form-group">
+                                <label>Anlass</label>
+                                <select id="demoOccasion">
+                                    <option value="birthday">🎂 Geburtstag</option>
+                                    <option value="wedding">💒 Hochzeit</option>
+                                    <option value="christmas">🎄 Weihnachten</option>
+                                    <option value="thanks">💐 Danke</option>
+                                    <option value="getwell">🏥 Gute Besserung</option>
+                                    <option value="baby">👶 Baby</option>
+                                    <option value="ramadan">🌙 Ramadan</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Tonalität</label>
+                                <select id="demoTone">
+                                    <option value="warm">😊 Warm</option>
+                                    <option value="funny">😂 Lustig</option>
+                                    <option value="formal">👔 Formell</option>
+                                    <option value="poetic">✍️ Poetisch</option>
+                                    <option value="short">⚡ Kurz</option>
+                                </select>
+                            </div>
+                            <button class="demo-btn" id="demoGenBtn">✨ Text generieren</button>
+                            <!-- Text Editor -->
+                            <div class="demo-editor" id="demoEditor">
+                                <div class="form-group" style="margin-top:16px;">
+                                    <label>📝 Text bearbeiten</label>
+                                    <textarea id="demoTextEditor" rows="4"
+                                        placeholder="Hier erscheint der generierte Text..."></textarea>
+                                </div>
+                                <div class="demo-text-controls">
+                                    <div class="demo-align-group">
+                                        <button class="demo-align-btn" data-align="left" title="Linksbündig">⬅</button>
+                                        <button class="demo-align-btn active" data-align="center"
+                                            title="Zentriert">⬛</button>
+                                        <button class="demo-align-btn" data-align="right"
+                                            title="Rechtsbündig">➡</button>
+                                    </div>
+                                    <div class="demo-size-group">
+                                        <span class="demo-size-label">A</span>
+                                        <input type="range" id="demoFontSize" min="0.6" max="1.4" step="0.05"
+                                            value="0.85" class="demo-size-slider">
+                                        <span class="demo-size-label" style="font-size:1.2em">A</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="demo-result">
+                            <div class="demo-card-preview">
+                                <div class="mini-card" id="demoCard">
+                                    <img id="demoCardBg" src="assets/templates/mood1.jpg" alt="" class="mini-card-bg">
+                                    <div class="mini-card-text" id="demoCardText">Klicke auf "Text generieren" um die
+                                        KI-Engine in Aktion zu sehen...</div>
+                                </div>
+                            </div>
+                            <!-- Mood Selector -->
+                            <div class="demo-design-bar">
+                                <span class="demo-label">🎨 Design wählen</span>
+                                <div class="demo-mood-grid" id="demoMoodGrid"></div>
+                            </div>
+                            <!-- Font Selector -->
+                            <div class="demo-design-bar">
+                                <span class="demo-label">✏️ Schriftart</span>
+                                <div class="demo-font-grid">
+                                    <button class="demo-font active" data-font="'Outfit', sans-serif">Aa</button>
+                                    <button class="demo-font" data-font="'Caveat', cursive"
+                                        style="font-family:'Caveat',cursive">Aa</button>
+                                    <button class="demo-font" data-font="'Dancing Script', cursive"
+                                        style="font-family:'Dancing Script',cursive">Aa</button>
+                                    <button class="demo-font" data-font="'Playfair Display', serif"
+                                        style="font-family:'Playfair Display',serif">Aa</button>
+                                    <button class="demo-font" data-font="'Pacifico', cursive"
+                                        style="font-family:'Pacifico',cursive">Aa</button>
+                                    <button class="demo-font" data-font="'Permanent Marker', cursive"
+                                        style="font-family:'Permanent Marker',cursive">Aa</button>
+                                </div>
+                            </div>
+                            <div class="result-meta" id="demoMeta"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features -->
+        <section id="features">
+            <div class="container">
+                <div class="section-header">
+                    <div class="section-tag">Features</div>
+                    <h2>Die komplette Engine</h2>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🤖</div>
+                        <h3>KI-Textgenerierung</h3>
+                        <p>Persönliche Grußtexte in 2 Sekunden. 15 Anlässe, 5 Tonalitäten.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🎨</div>
+                        <h3>27 Designvorlagen</h3>
+                        <p>Professionelle Kartendesigns für jeden Anlass – sofort als PNG.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🌍</div>
+                        <h3>7 Sprachen</h3>
+                        <p>DE, EN, TR, ES, FR, IT, BG – automatisch korrekt und kulturell passend.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">✏️</div>
+                        <h3>Card Designer</h3>
+                        <p>Sticker, 16 Schriftarten, Texteffekte, Farben – volle Gestaltungsfreiheit.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📸</div>
+                        <h3>Export & Teilen</h3>
+                        <p>Download als Bild, teilen via WhatsApp, Telegram oder Link.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">⚡</div>
+                        <h3>API-Ready</h3>
+                        <p>REST API mit Key-Auth. Ein POST-Request = fertige Karte.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing -->
+        <section id="pricing">
+            <div class="container">
+                <div class="section-header">
+                    <div class="section-tag">Preise</div>
+                    <h2>Transparent & fair</h2>
+                </div>
+                <div class="pricing-grid">
+                    <div class="price-card">
+                        <div class="price-name">Free</div>
+                        <div class="price-amount">0<span class="eur">€</span></div>
+                        <div class="price-period">50 Requests / Tag</div>
+                        <ul class="price-features">
+                            <li>KI-Textgenerierung</li>
+                            <li>Alle Anlässe & Sprachen</li>
+                            <li>27 Designs</li>
+                            <li>Card Designer</li>
+                        </ul><button class="price-btn price-btn-outline" onclick="loginWithGoogle()">Kostenlos
+                            starten</button>
+                    </div>
+                    <div class="price-card featured">
+                        <div class="price-name">Starter</div>
+                        <div class="price-amount">99<span class="eur">€/Mo</span></div>
+                        <div class="price-period">1.000 Requests / Monat</div>
+                        <ul class="price-features">
+                            <li>Alles aus Free</li>
+                            <li>Card Render API</li>
+                            <li>Fertige PNG-Bilder</li>
+                            <li>E-Mail Support</li>
+                        </ul><a href="mailto:api@grussgenerator.de" class="price-btn price-btn-primary">Jetzt
+                            starten</a>
+                    </div>
+                    <div class="price-card">
+                        <div class="price-name">Enterprise</div>
+                        <div class="price-amount">299<span class="eur">€/Mo</span></div>
+                        <div class="price-period">Unlimited</div>
+                        <ul class="price-features">
+                            <li>Alles aus Starter</li>
+                            <li>White-Label</li>
+                            <li>Custom Designs</li>
+                            <li>Priority Support</li>
+                        </ul><a href="mailto:api@grussgenerator.de" class="price-btn price-btn-outline">Kontakt</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section id="contact" class="cta-section">
+            <div class="container" style="text-align:center;">
+                <h2>Bereit, loszulegen?</h2>
+                <p style="color:var(--text-muted);margin:16px 0 32px;">Erstellen Sie jetzt kostenlos Ihre erste
+                    KI-Grußkarte.</p>
+                <button class="btn btn-primary" onclick="loginWithGoogle()">🚀 Kostenlos starten mit Google</button>
+            </div>
+        </section>
+
+        <footer class="b2b-footer">
+            <div class="container">
+                <p>© 2026 grussgenerator.de | <a href="impressum.html">Impressum</a> | <a
+                        href="datenschutz.html">Datenschutz</a></p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- ========== VIEW 2: DASHBOARD ========== -->
+    <div id="viewDashboard" class="hidden">
+        <div class="container dash-container">
+
+            <!-- Step 1: Text Generation -->
+            <section class="dash-card" id="dashStep1">
+                <h2>✨ Grußtext generieren</h2>
+                <form id="dashForm">
+                    <!-- Occasion Grid -->
+                    <div class="form-group">
+                        <label>📅 Anlass</label>
+                        <div class="occasion-grid">
+                            <button type="button" class="occasion-btn active" data-occasion="birthday"><span
+                                    class="occasion-icon">🎂</span><span>Geburtstag</span></button>
+                            <button type="button" class="occasion-btn" data-occasion="wedding"><span
+                                    class="occasion-icon">💒</span><span>Hochzeit</span></button>
+                            <button type="button" class="occasion-btn" data-occasion="christmas"><span
+                                    class="occasion-icon">🎄</span><span>Weihnachten</span></button>
+                            <button type="button" class="occasion-btn" data-occasion="easter"><span
+                                    class="occasion-icon">🐰</span><span>Ostern</span></button>
+                            <button type="button" class="occasion-btn" data-occasion="newyear"><span
+                                    class="occasion-icon">🎆</span><span>Neujahr</span></button>
+                            <button type="button" class="occasion-btn" data-occasion="thanks"><span
+                                    class="occasion-icon">💐</span><span>Danke</span></button>
+                            <button type="button" class="occasion-btn" data-occasion="baby"><span
+                                    class="occasion-icon">👶</span><span>Baby</span></button>
+                            <button type="button" class="occasion-btn" data-occasion="getwell"><span
+                                    class="occasion-icon">🏥</span><span>Gute Besserung</span></button>
+                            <button type="button" class="occasion-btn" data-occasion="mothersday"><span
+                                    class="occasion-icon">👩‍👧</span><span>Muttertag</span></button>
+                            <button type="button" class="occasion-btn" data-occasion="fathersday"><span
+                                    class="occasion-icon">👨‍👦</span><span>Vatertag</span></button>
+                            <button type="button" class="occasion-btn" data-occasion="graduation"><span
+                                    class="occasion-icon">🎓</span><span>Abschluss</span></button>
+                            <button type="button" class="occasion-btn" data-occasion="anniversary"><span
+                                    class="occasion-icon">💍</span><span>Jubiläum</span></button>
+                            <button type="button" class="occasion-btn" data-occasion="ramadan"><span
+                                    class="occasion-icon">🌙</span><span>Ramadan</span></button>
+                            <button type="button" class="occasion-btn" data-occasion="lent"><span
+                                    class="occasion-icon">✝️</span><span>Fastenzeit</span></button>
+                            <button type="button" class="occasion-btn" data-occasion="general"><span
+                                    class="occasion-icon">💌</span><span>Sonstiges</span></button>
+                        </div>
+                    </div>
+                    <div class="form-row-2col">
+                        <div class="form-group"><label>👤 Name</label><input type="text" id="dashName"
+                                placeholder="z.B. Anna..." required></div>
+                        <div class="form-group"><label>💝 Beziehung</label>
+                            <select id="dashRelation" required>
+                                <option value="">Bitte wählen...</option>
+                                <option value="none">Keine Angabe</option>
+                                <option value="friend">Freund/in</option>
+                                <option value="romantic">Partner/in 💕</option>
+                                <option value="family">Familie</option>
+                                <option value="colleague">Kollege/in</option>
+                                <option value="boss">Chef/in</option>
+                                <option value="acquaintance">Bekannte/r</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group"><label>💡 Zusatzinfo (optional)</label><textarea id="dashInfo"
+                            placeholder="z.B. 'wird 30', 'liebt Reisen'..."></textarea></div>
+                    <div class="form-row-2col">
+                        <div class="form-group"><label>🎨 Tonalität</label>
+                            <select id="dashTone">
+                                <option value="warm">😊 Warm & Herzlich</option>
+                                <option value="funny">😂 Humorvoll</option>
+                                <option value="formal">👔 Formell</option>
+                                <option value="poetic">✍️ Poetisch</option>
+                                <option value="short">⚡ Kurz & Knackig</option>
+                            </select>
+                        </div>
+                        <div class="form-group"><label>🌍 Sprache</label>
+                            <select id="dashLang">
+                                <option value="de">🇩🇪 Deutsch</option>
+                                <option value="en">🇬🇧 English</option>
+                                <option value="tr">🇹🇷 Türkçe</option>
+                                <option value="es">🇪🇸 Español</option>
+                                <option value="fr">🇫🇷 Français</option>
+                                <option value="it">🇮🇹 Italiano</option>
+                                <option value="bg">🇧🇬 Български</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-generate" id="dashGenBtn">
+                        <span class="btn-text">✨ Gruß generieren ✨</span>
+                        <span class="btn-loading hidden"><span class="loading-spinner"></span> Die KI denkt
+                            nach...</span>
+                    </button>
+                </form>
+            </section>
+
+            <!-- Step 2: Card Editor -->
+            <section class="dash-card hidden" id="dashStep2">
+                <div class="editor-header">
+                    <button class="btn-back" id="backToForm">← Zurück</button>
+                    <h2>🎉 Grußkarte gestalten</h2>
+                </div>
+                <div class="editor-layout">
+                    <!-- LEFT: Sticker Panel -->
+                    <div class="sticker-panel">
+                        <h3>🎨 Sticker</h3>
+                        <div class="sticker-tabs-wrapper">
+                            <div class="sticker-tabs-nav" id="stickerTabsNav">
+                                <button class="sticker-tab-btn active" data-tab="feiern">🎉</button>
+                                <button class="sticker-tab-btn" data-tab="herzen">❤️</button>
+                                <button class="sticker-tab-btn" data-tab="natur">🌸</button>
+                                <button class="sticker-tab-btn" data-tab="symbole">🍀</button>
+                                <button class="sticker-tab-btn" data-tab="weihnachten">🎅</button>
+                                <button class="sticker-tab-btn" data-tab="ostern">🐰</button>
+                                <button class="sticker-tab-btn" data-tab="essen">🍾</button>
+                                <button class="sticker-tab-btn" data-tab="gesichter">😊</button>
+                            </div>
+                        </div>
+                        <div class="sticker-tab-content active" id="tab-feiern">
+                            <div class="sticker-grid">
+                                <button class="sticker" data-emoji="🎈">🎈</button><button class="sticker"
+                                    data-emoji="🎉">🎉</button><button class="sticker"
+                                    data-emoji="🎊">🎊</button><button class="sticker"
+                                    data-emoji="🎁">🎁</button><button class="sticker"
+                                    data-emoji="🎂">🎂</button><button class="sticker"
+                                    data-emoji="🎄">🎄</button><button class="sticker"
+                                    data-emoji="🎆">🎆</button><button class="sticker"
+                                    data-emoji="🎇">🎇</button><button class="sticker"
+                                    data-emoji="🪅">🪅</button><button class="sticker" data-emoji="🧨">🧨</button>
+                            </div>
+                        </div>
+                        <div class="sticker-tab-content hidden" id="tab-herzen">
+                            <div class="sticker-grid">
+                                <button class="sticker" data-emoji="❤️">❤️</button><button class="sticker"
+                                    data-emoji="💕">💕</button><button class="sticker"
+                                    data-emoji="💖">💖</button><button class="sticker"
+                                    data-emoji="💗">💗</button><button class="sticker"
+                                    data-emoji="💘">💘</button><button class="sticker"
+                                    data-emoji="💝">💝</button><button class="sticker"
+                                    data-emoji="💞">💞</button><button class="sticker"
+                                    data-emoji="💓">💓</button><button class="sticker"
+                                    data-emoji="🩷">🩷</button><button class="sticker" data-emoji="🧡">🧡</button>
+                            </div>
+                        </div>
+                        <div class="sticker-tab-content hidden" id="tab-natur">
+                            <div class="sticker-grid">
+                                <button class="sticker" data-emoji="🌸">🌸</button><button class="sticker"
+                                    data-emoji="🌺">🌺</button><button class="sticker"
+                                    data-emoji="🌷">🌷</button><button class="sticker"
+                                    data-emoji="🌹">🌹</button><button class="sticker"
+                                    data-emoji="🌻">🌻</button><button class="sticker" data-emoji="⭐">⭐</button><button
+                                    class="sticker" data-emoji="✨">✨</button><button class="sticker"
+                                    data-emoji="🌈">🌈</button><button class="sticker"
+                                    data-emoji="☀️">☀️</button><button class="sticker" data-emoji="🌙">🌙</button>
+                            </div>
+                        </div>
+                        <div class="sticker-tab-content hidden" id="tab-symbole">
+                            <div class="sticker-grid">
+                                <button class="sticker" data-emoji="👶">👶</button><button class="sticker"
+                                    data-emoji="💒">💒</button><button class="sticker"
+                                    data-emoji="🎓">🎓</button><button class="sticker"
+                                    data-emoji="🏆">🏆</button><button class="sticker"
+                                    data-emoji="🍀">🍀</button><button class="sticker"
+                                    data-emoji="🦋">🦋</button><button class="sticker"
+                                    data-emoji="💍">💍</button><button class="sticker"
+                                    data-emoji="🏡">🏡</button><button class="sticker"
+                                    data-emoji="👨‍👩‍👧">👨‍👩‍👧</button><button class="sticker"
+                                    data-emoji="📜">📜</button>
+                            </div>
+                        </div>
+                        <div class="sticker-tab-content hidden" id="tab-weihnachten">
+                            <div class="sticker-grid">
+                                <button class="sticker" data-emoji="🎅">🎅</button><button class="sticker"
+                                    data-emoji="🤶">🤶</button><button class="sticker"
+                                    data-emoji="❄️">❄️</button><button class="sticker" data-emoji="⛄">⛄</button><button
+                                    class="sticker" data-emoji="🦌">🦌</button><button class="sticker"
+                                    data-emoji="🌟">🌟</button><button class="sticker"
+                                    data-emoji="🕯️">🕯️</button><button class="sticker"
+                                    data-emoji="🧣">🧣</button><button class="sticker"
+                                    data-emoji="🎿">🎿</button><button class="sticker" data-emoji="🛷">🛷</button>
+                            </div>
+                        </div>
+                        <div class="sticker-tab-content hidden" id="tab-ostern">
+                            <div class="sticker-grid">
+                                <button class="sticker" data-emoji="🐰">🐰</button><button class="sticker"
+                                    data-emoji="🥚">🥚</button><button class="sticker"
+                                    data-emoji="🐣">🐣</button><button class="sticker"
+                                    data-emoji="🐤">🐤</button><button class="sticker"
+                                    data-emoji="🌼">🌼</button><button class="sticker"
+                                    data-emoji="🐝">🐝</button><button class="sticker"
+                                    data-emoji="🌱">🌱</button><button class="sticker" data-emoji="🐞">🐞</button>
+                            </div>
+                        </div>
+                        <div class="sticker-tab-content hidden" id="tab-essen">
+                            <div class="sticker-grid">
+                                <button class="sticker" data-emoji="🥂">🥂</button><button class="sticker"
+                                    data-emoji="🍾">🍾</button><button class="sticker"
+                                    data-emoji="🍰">🍰</button><button class="sticker" data-emoji="☕">☕</button><button
+                                    class="sticker" data-emoji="🍩">🍩</button><button class="sticker"
+                                    data-emoji="🍪">🍪</button><button class="sticker"
+                                    data-emoji="🍫">🍫</button><button class="sticker" data-emoji="🧁">🧁</button>
+                            </div>
+                        </div>
+                        <div class="sticker-tab-content hidden" id="tab-gesichter">
+                            <div class="sticker-grid">
+                                <button class="sticker" data-emoji="😊">😊</button><button class="sticker"
+                                    data-emoji="😂">😂</button><button class="sticker"
+                                    data-emoji="🥳">🥳</button><button class="sticker"
+                                    data-emoji="😍">😍</button><button class="sticker"
+                                    data-emoji="🤗">🤗</button><button class="sticker"
+                                    data-emoji="🙏">🙏</button><button class="sticker"
+                                    data-emoji="😇">😇</button><button class="sticker"
+                                    data-emoji="🥹">🥹</button><button class="sticker"
+                                    data-emoji="🤩">🤩</button><button class="sticker" data-emoji="😘">😘</button>
+                            </div>
+                        </div>
+                        <button class="btn-clear-stickers" id="clearStickersBtn">🗑️ Alle entfernen</button>
+                    </div>
+
+                    <!-- CENTER: Card -->
+                    <div class="card-center">
+                        <div class="greeting-card-wrapper">
+                            <div class="greeting-card" id="greetingCard" data-mood="1">
+                                <div class="placed-stickers" id="placedStickers"></div>
+                                <div class="card-overlay"></div>
+                                <img id="cardCustomBg" class="card-custom-bg hidden" crossorigin="anonymous" alt="">
+                                <div id="generatedMessage" class="message-text"></div>
+                                <div class="card-footer"><span class="card-watermark"><img src="assets/favicon.png"
+                                            alt="" class="brand-icon small"> grussgenerator.de</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT: Design Panel -->
+                    <div class="design-panel">
+                        <h3>⚙️ Design</h3>
+                        <div class="design-tabs-nav">
+                            <button class="design-tab-btn active" data-tab="mood">🎨</button>
+                            <button class="design-tab-btn" data-tab="text">Aa</button>
+                            <button class="design-tab-btn" data-tab="image">📷</button>
+                        </div>
+                        <!-- Mood Tab -->
+                        <div class="design-tab-content active" id="design-tab-mood">
+                            <div class="design-section">
+                                <span class="section-label">Stimmung</span>
+                                <div class="mood-grid-compact" id="staticMoodsContainer"></div>
+                                <div class="remix-section">
+                                    <div id="supabaseMoods" class="mood-grid-compact"
+                                        style="margin-top:15px;border-top:1px solid rgba(255,255,255,0.08);padding-top:15px;">
+                                    </div>
+                                    <button class="btn-remix" id="remixBtn">🎲 Zufall</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Text Tab -->
+                        <div class="design-tab-content hidden" id="design-tab-text">
+                            <div class="design-section">
+                                <span class="section-label">Farbe & Größe</span>
+                                <div class="mini-controls">
+                                    <input type="color" id="textColorPicker" value="#1e293b" class="mini-color-picker">
+                                    <input type="range" id="textSizeSlider" min="1.0" max="2.2" step="0.1" value="1.4"
+                                        class="mini-slider">
+                                </div>
+                            </div>
+                            <div class="design-section">
+                                <span class="section-label">Effekte</span>
+                                <div class="effect-toggles">
+                                    <button class="effect-btn" id="effectShadow">🌑 Schatten</button>
+                                    <button class="effect-btn" id="effectOutline">⭕ Umrandung</button>
+                                    <button class="effect-btn" id="effectGlow">✨ Leuchten</button>
+                                </div>
+                            </div>
+                            <div class="design-section">
+                                <span class="section-label">Schriftart</span>
+                                <div class="font-grid-mini">
+                                    <button class="font-mini active" data-font="'Outfit', sans-serif">Aa</button>
+                                    <button class="font-mini" data-font="'Playfair Display', serif"
+                                        style="font-family:'Playfair Display',serif">Aa</button>
+                                    <button class="font-mini" data-font="'Caveat', cursive"
+                                        style="font-family:'Caveat',cursive">Aa</button>
+                                    <button class="font-mini" data-font="'Indie Flower', cursive"
+                                        style="font-family:'Indie Flower',cursive">Aa</button>
+                                    <button class="font-mini" data-font="'Kalam', cursive"
+                                        style="font-family:'Kalam',cursive">Aa</button>
+                                    <button class="font-mini" data-font="'Patrick Hand', cursive"
+                                        style="font-family:'Patrick Hand',cursive">Aa</button>
+                                    <button class="font-mini" data-font="'Shadows Into Light', cursive"
+                                        style="font-family:'Shadows Into Light',cursive">Aa</button>
+                                    <button class="font-mini" data-font="'Dancing Script', cursive"
+                                        style="font-family:'Dancing Script',cursive">Aa</button>
+                                    <button class="font-mini" data-font="'Great Vibes', cursive"
+                                        style="font-family:'Great Vibes',cursive">Aa</button>
+                                    <button class="font-mini" data-font="'Sacramento', cursive"
+                                        style="font-family:'Sacramento',cursive">Aa</button>
+                                    <button class="font-mini" data-font="'Satisfy', cursive"
+                                        style="font-family:'Satisfy',cursive">Aa</button>
+                                    <button class="font-mini" data-font="'Pacifico', cursive"
+                                        style="font-family:'Pacifico',cursive">Aa</button>
+                                    <button class="font-mini" data-font="'Lobster', cursive"
+                                        style="font-family:'Lobster',cursive">Aa</button>
+                                    <button class="font-mini" data-font="'Amatic SC', cursive"
+                                        style="font-family:'Amatic SC',cursive;font-weight:700">Aa</button>
+                                    <button class="font-mini" data-font="'Permanent Marker', cursive"
+                                        style="font-family:'Permanent Marker',cursive">Aa</button>
+                                    <button class="font-mini" data-font="'Comic Neue', cursive"
+                                        style="font-family:'Comic Neue',cursive">Aa</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Image Tab -->
+                        <div class="design-tab-content hidden" id="design-tab-image">
+                            <div class="design-section">
+                                <span class="section-label">Bild hinzufügen</span>
+                                <div class="upload-controls-row">
+                                    <div class="upload-mini" id="uploadBgZone"><input type="file" id="bgUpload"
+                                            accept="image/*" class="hidden"><span>🖼️ Hintergrund</span></div>
+                                    <div class="upload-mini" id="uploadStickerZone"><input type="file"
+                                            id="stickerUpload" accept="image/*" class="hidden"><span>🧩 Sticker</span>
+                                    </div>
+                                </div>
+                                <button class="btn-remove-mini hidden" id="removeBgBtn">❌ Hintergrund entfernen</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Bar -->
+                <div class="unified-action-bar">
+                    <button class="btn-download-compact" id="downloadBtn"><span>📸</span> Als Bild speichern</button>
+                    <button class="btn-share-trigger" id="copyTextBtn"><span>📋</span> Text kopieren</button>
+                    <button class="btn-share-trigger" id="newCardBtn"><span>✨</span> Neue Karte</button>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.11/html-to-image.js"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"
+        crossorigin="anonymous"></script>
+    <script src="partner.js"></script>
+</body>
+
+</html>

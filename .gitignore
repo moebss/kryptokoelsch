@@ -10,3 +10,10 @@ transparentrichtig.png
 
 # General ignores
 *.zip
+
+# Ignore nested repositories to prevent build failures
+BruehlerBuergerbrief/
+FDPBuergerbrief/
+coffeinecrashout/
+dndpage/
+peggyswebsite/

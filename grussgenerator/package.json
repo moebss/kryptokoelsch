@@ -1,8 +1,12 @@
 {
-    "name": "grussgenerator-static",
+    "name": "grussgenerator-landingpage",
     "version": "1.0.0",
+    "description": "Premium Landingpage for grussgenerator.de",
+    "main": "index.html",
     "scripts": {
-        "build": "exit 0"
+        "dev": "npx servor"
     },
-    "dependencies": {}
+    "dependencies": {
+        "@vercel/og": "^0.6.0"
+    }
 }

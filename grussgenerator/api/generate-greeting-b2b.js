@@ -189,14 +189,15 @@ IMPORTANT RULES:
 
         clearTimeout(timeout);
 
-        const data = await response.json();
-
         if (!response.ok) {
-            console.error('Perplexity API Error (B2B):', data);
-            return res.status(response.status).json({
-                error: `AI provider error: ${data.error?.message || response.statusText}`
+            const errText = await response.text();
+            console.error('Perplexity API Error:', response.status, errText.substring(0, 200));
+            return res.status(502).json({
+                error: `Die KI-Engine ist momentan ausgelastet (Status ${response.status}). Bitte in wenigen Sekunden nochmal versuchen.`
             });
         }
+
+        const data = await response.json();
 
         // --- USAGE LOGGING ---
         console.log(`[B2B] key=${apiKey.substring(0, 8)}... occasion=${occasion} lang=${lang} tone=${tone}`);

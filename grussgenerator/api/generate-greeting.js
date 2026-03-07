@@ -157,14 +157,15 @@ IMPORTANT RULES:
 
         clearTimeout(timeout);
 
-        const data = await response.json();
-
         if (!response.ok) {
-            console.error('Perplexity API Error:', data);
-            return res.status(response.status).json({
-                error: `API Fehler: ${data.error?.message || response.statusText}`
+            const errText = await response.text();
+            console.error('Perplexity API Error:', response.status, errText.substring(0, 200));
+            return res.status(502).json({
+                error: `Die KI-Engine ist momentan ausgelastet (Status ${response.status}). Bitte in wenigen Sekunden nochmal versuchen.`
             });
         }
+
+        const data = await response.json();
 
         return res.status(200).json({
             text: data.choices[0].message.content.trim(),

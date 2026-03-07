@@ -11,9 +11,41 @@ transparentrichtig.png
 # General ignores
 *.zip
 
-# Ignore nested repositories to prevent build failures
+# Nested repositories
 BruehlerBuergerbrief/
 FDPBuergerbrief/
 coffeinecrashout/
 dndpage/
 peggyswebsite/
+Buergerbrief_Pulheim/
+Tattoo/
+mobabat/
+portfolio/
+scraper/
+temp_sync_repo/
+portfolio/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor folders and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

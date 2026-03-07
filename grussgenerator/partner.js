@@ -108,7 +108,15 @@ document.getElementById('demoGenBtn')?.addEventListener('click', async () => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name, occasion, tone, relation: 'friend', lang: 'de' })
         });
-        const data = await res.json();
+
+        const rawText = await res.text();
+        let data;
+        try {
+            data = JSON.parse(rawText);
+        } catch (e) {
+            throw new Error('Server-Timeout oder HTML Error');
+        }
+
         if (data.text) {
             document.getElementById('demoCardText').innerHTML = data.text.replace(/\n/g, '<br>');
             document.getElementById('demoTextEditor').value = data.text;
@@ -244,7 +252,15 @@ document.getElementById('dashForm')?.addEventListener('submit', async (e) => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name, relation, info, tone, lang, occasion: currentOccasion })
         });
-        const data = await res.json();
+
+        const rawText = await res.text();
+        let data;
+        try {
+            data = JSON.parse(rawText);
+        } catch (e) {
+            throw new Error('Server-Timeout oder HTML Error');
+        }
+
         if (data.text) {
             document.getElementById('generatedMessage').textContent = data.text;
             // Show editor

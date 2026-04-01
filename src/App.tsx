@@ -124,7 +124,9 @@ export default function App() {
       <main className="relative z-10">
 
         {/* --- Hero Section --- */}
-        <section className="relative min-h-[100vh] flex items-center justify-center overflow-hidden pt-20 px-6">
+        <section className="relative min-h-[100vh] flex flex-col items-center justify-between overflow-hidden pt-32 pb-10 px-6">
+          <div className="w-full shrink-0"></div> {/* Top Spacer */}
+
           <div className="absolute inset-0 flex items-center justify-center opacity-30 pointer-events-none">
             <motion.div
               animate={{ rotate: 360 }}
@@ -138,7 +140,7 @@ export default function App() {
             />
           </div>
 
-          <div className="max-w-5xl mx-auto text-center relative z-10">
+          <div className="max-w-5xl mx-auto text-center relative z-10 my-auto py-10">
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -176,7 +178,7 @@ export default function App() {
           <motion.div
             animate={{ y: [0, 10, 0] }}
             transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/30"
+            className="flex flex-col items-center gap-2 text-white/30 shrink-0 relative z-10"
           >
             <span className="text-xs font-medium tracking-widest uppercase">Scroll</span>
             <div className="w-px h-12 bg-gradient-to-b from-white/30 to-transparent"></div>
@@ -421,6 +423,18 @@ export default function App() {
           </div>
 
           <div className="w-full h-px bg-white/5 mb-8"></div>
+
+          <div className="mb-8">
+            <a href="https://rheindorf.digital" target="_blank" rel="noopener noreferrer" className="badge-rheindorf">
+              <span className="badge-rheindorf__inner">
+                <span className="badge-rheindorf__text">
+                  <span className="badge-rheindorf__eyebrow">Made by</span>
+                  <span className="badge-rheindorf__name">rheindorf<span>.digital</span></span>
+                </span>
+              </span>
+              <span className="badge-rheindorf__tip" />
+            </a>
+          </div>
 
           <div className="w-full flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-white/30">
             <p>&copy; {new Date().getFullYear()} KryptoKoelsch. Made in Rheinland.</p>

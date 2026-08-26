@@ -384,7 +384,7 @@ export default function App() {
             </FadeIn>
 
             {/* Hero Action Buttons */}
-            <FadeIn delay={0.3} className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+            <FadeIn delay={0.3} className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
               <a 
                 href="https://chat.whatsapp.com/GSfXAf71lQT0UvW6LRh9wv" 
                 target="_blank" 
@@ -403,6 +403,52 @@ export default function App() {
                 <Calendar size={18} className="text-amber-600 dark:text-[var(--color-brand)]" />
                 <span>Nächstes Meetup ansehen</span>
               </a>
+            </FadeIn>
+
+            {/* Hero Community Group Photo Showcase */}
+            <FadeIn delay={0.35} className="mb-14 max-w-4xl mx-auto">
+              <div className="relative rounded-3xl overflow-hidden p-2 md:p-3 glass-card border border-amber-500/30 dark:border-white/15 shadow-2xl shadow-amber-900/10 dark:shadow-black/60 group">
+                <div className="relative rounded-2xl overflow-hidden aspect-[16/9] md:aspect-[21/9] bg-black/40">
+                  <img 
+                    src="/hero-bg.jpg" 
+                    alt="KryptoKölsch Community Gruppenbild" 
+                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700" 
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent"></div>
+
+                  {/* Top Floating Badges */}
+                  <div className="absolute top-4 left-4 right-4 flex items-center justify-between">
+                    <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white text-xs font-semibold font-mono">
+                      <span className="w-2 h-2 rounded-full bg-[var(--color-brand)] animate-pulse"></span>
+                      Echte Community • Echter Dialog
+                    </span>
+                    <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--color-brand)] text-black text-xs font-bold font-mono shadow-sm">
+                      🍻 Kölsch & Web3
+                    </span>
+                  </div>
+
+                  {/* Bottom Caption */}
+                  <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between text-white text-left">
+                    <div>
+                      <div className="text-base sm:text-lg font-serif font-bold text-white drop-shadow-md">
+                        Das KryptoKölsch Meetup im STARTPLATZ Köln
+                      </div>
+                      <div className="text-xs sm:text-sm text-white/80 font-light drop-shadow">
+                        Monatliche Treffen mit über 50 Buildern, Devs & Krypto-Pionieren aus dem Rheinland.
+                      </div>
+                    </div>
+                    <a
+                      href="https://chat.whatsapp.com/GSfXAf71lQT0UvW6LRh9wv"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hidden md:inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white/20 hover:bg-[var(--color-brand)] hover:text-black backdrop-blur-md border border-white/30 text-white text-xs font-bold transition-all shrink-0 ml-4"
+                    >
+                      <span>Dabei sein</span>
+                      <ArrowRight size={14} />
+                    </a>
+                  </div>
+                </div>
+              </div>
             </FadeIn>
 
             {/* Hero Stats & Highlights Grid */}

@@ -11,7 +11,6 @@ import {
   ChevronRight,
   ChevronDown,
   Calendar,
-  MapPin,
   Users,
   Sparkles,
   ShieldCheck,
@@ -22,7 +21,6 @@ import {
   Check,
   Heart,
   ArrowUpRight,
-  Clock,
   Compass
 } from 'lucide-react';
 import type { HTMLMotionProps } from 'framer-motion';
@@ -698,49 +696,6 @@ export default function App() {
               <p className="text-base md:text-lg text-white/60 mt-4 font-light">
                 Sichere dir deinen Platz über Luma. Der Eintritt ist immer frei.
               </p>
-            </FadeIn>
-
-            {/* Featured Event Banner Card */}
-            <FadeIn delay={0.1} className="mb-10">
-              <div className="glass-card p-6 md:p-8 rounded-3xl border border-[var(--color-brand)]/35 bg-gradient-to-r from-[var(--color-brand)]/[0.12] via-white/[0.03] to-transparent relative overflow-hidden flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 shadow-2xl shadow-black/60">
-                
-                <div className="space-y-3">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--color-brand)] text-black text-xs font-bold uppercase tracking-wider font-mono shadow-sm">
-                    <Clock size={13} />
-                    <span>Nächstes KryptoKölsch Meetup</span>
-                  </div>
-                  <h3 className="text-2xl md:text-3xl font-serif font-bold text-white">
-                    Base, Solana & AI Agents • Rheinland Web3 Edition
-                  </h3>
-                  <div className="flex flex-wrap items-center gap-y-2 gap-x-6 text-sm text-white/70">
-                    <span className="flex items-center gap-1.5">
-                      <Calendar size={15} className="text-[var(--color-brand)]" />
-                      Jeden Monat in Köln
-                    </span>
-                    <span className="flex items-center gap-1.5">
-                      <MapPin size={15} className="text-[var(--color-brand)]" />
-                      STARTPLATZ Köln (Mediapark)
-                    </span>
-                    <span className="flex items-center gap-1.5">
-                      <Users size={15} className="text-[var(--color-brand)]" />
-                      Free RSVP via Luma
-                    </span>
-                  </div>
-                </div>
-
-                <div className="shrink-0 w-full lg:w-auto">
-                  <a 
-                    href="https://luma.com/calendar/cal-By6C0aAuF3FgjeU" 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className="w-full lg:w-auto inline-flex items-center justify-center gap-2 bg-[var(--color-brand)] hover:bg-[var(--color-brand-light)] text-black font-bold px-6 py-3.5 rounded-xl text-sm transition-all duration-200 shadow-lg shadow-[var(--color-brand)]/30 hover:scale-105"
-                  >
-                    <span>Auf Luma teilnehmen</span>
-                    <ArrowUpRight size={16} />
-                  </a>
-                </div>
-
-              </div>
             </FadeIn>
 
             {/* Embedded Luma Calendar in macOS-Style Container */}

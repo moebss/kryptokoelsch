@@ -408,32 +408,6 @@ export default function App() {
               </div>
             </FadeIn>
 
-            {/* Hero Stats & Highlights Grid */}
-            <FadeIn delay={0.4} className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 max-w-4xl mx-auto">
-              {[
-                { number: "500+", label: "Community Member", sub: "Builder, Devs & HODLer" },
-                { number: "25+", label: "Meetups veranstaltet", sub: "Im STARTPLATZ & Brauhäusern" },
-                { number: "100%", label: "Kostenlos & Offen", sub: "Kein Eintritt, kein Gatekeeping" },
-                { number: "0%", label: "Sales & Shilling", sub: "Reiner Wissensaustausch" },
-              ].map((stat, idx) => (
-                <div 
-                  key={idx} 
-                  className="glass-card p-4 md:p-5 rounded-2xl text-center relative overflow-hidden group hover:border-[var(--color-brand)]/40 transition-all duration-300"
-                >
-                  <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[var(--color-brand)]/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                  <div className="font-serif font-black text-2xl md:text-3xl text-white mb-1 tracking-tight group-hover:text-[var(--color-brand)] transition-colors">
-                    {stat.number}
-                  </div>
-                  <div className="text-xs font-semibold text-white/90 uppercase tracking-wider mb-0.5">
-                    {stat.label}
-                  </div>
-                  <div className="text-[11px] text-white/40 hidden sm:block">
-                    {stat.sub}
-                  </div>
-                </div>
-              ))}
-            </FadeIn>
-
           </div>
 
           {/* Floating Kölsch Bubbles when toast is clicked */}

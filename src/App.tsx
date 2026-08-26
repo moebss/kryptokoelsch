@@ -1,20 +1,44 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, ArrowRight, ExternalLink, MessageCircle, Linkedin, ChevronRight } from 'lucide-react';
+import confetti from 'canvas-confetti';
+import {
+  Menu,
+  X,
+  ArrowRight,
+  ExternalLink,
+  MessageCircle,
+  Linkedin,
+  ChevronRight,
+  ChevronDown,
+  Calendar,
+  MapPin,
+  Users,
+  Sparkles,
+  ShieldCheck,
+  Flame,
+  Code2,
+  Beer,
+  Share2,
+  Check,
+  Heart,
+  ArrowUpRight,
+  Clock,
+  Compass
+} from 'lucide-react';
 import type { HTMLMotionProps } from 'framer-motion';
 
 type FadeInProps = {
-  children: React.ReactNode,
-  delay?: number,
-  className?: string
+  children: React.ReactNode;
+  delay?: number;
+  className?: string;
 } & HTMLMotionProps<"div">;
 
 const FadeIn = ({ children, delay = 0, className = "", ...props }: FadeInProps) => (
   <motion.div
-    initial={{ opacity: 0, y: 30 }}
+    initial={{ opacity: 0, y: 25 }}
     whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true, margin: "-100px" }}
-    transition={{ duration: 0.7, delay, ease: [0.21, 0.47, 0.32, 0.98] }}
+    viewport={{ once: true, margin: "-80px" }}
+    transition={{ duration: 0.65, delay, ease: [0.16, 1, 0.3, 1] }}
     className={className}
     {...props}
   >
@@ -27,326 +51,673 @@ export default function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showImpressum, setShowImpressum] = useState(false);
   const [showDatenschutz, setShowDatenschutz] = useState(false);
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [copiedLink, setCopiedLink] = useState(false);
+  
+  // Interactive Kölsch Prost Counter
+  const [cheersCount, setCheersCount] = useState<number>(() => {
+    const saved = localStorage.getItem('kryptokoelsch_cheers');
+    return saved ? parseInt(saved, 10) : 428;
+  });
+  const [showCheerAnim, setShowCheerAnim] = useState(false);
+  const [bubbles, setBubbles] = useState<{ id: number; left: number; size: number }[]>([]);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      setIsScrolled(window.scrollY > 40);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const handleCheers = () => {
+    const newCount = cheersCount + 1;
+    setCheersCount(newCount);
+    localStorage.setItem('kryptokoelsch_cheers', newCount.toString());
+    setShowCheerAnim(true);
+    
+    // Golden Kölsch sparkles & foam confetti
+    try {
+      confetti({
+        particleCount: 45,
+        spread: 70,
+        origin: { y: 0.8 },
+        colors: ['#FF9500', '#FFB340', '#FFFFFF', '#F59E0B', '#FCD34D']
+      });
+    } catch {
+      // safe fallback
+    }
+
+    // Spawn celebratory bubbles
+    const newBubbles = Array.from({ length: 8 }).map((_, i) => ({
+      id: Date.now() + i,
+      left: 10 + Math.random() * 80,
+      size: 6 + Math.random() * 12
+    }));
+    setBubbles((prev) => [...prev.slice(-12), ...newBubbles]);
+
+    setTimeout(() => {
+      setShowCheerAnim(false);
+    }, 1500);
+  };
+
+  const handleCopyInvite = () => {
+    navigator.clipboard.writeText('https://chat.whatsapp.com/GSfXAf71lQT0UvW6LRh9wv');
+    setCopiedLink(true);
+    setTimeout(() => setCopiedLink(false), 2500);
+  };
+
   const navLinks = [
-    { name: 'Über Uns', href: '#about' },
-    { name: 'Mission', href: '#mission' },
+    { name: 'Über uns', href: '#about' },
+    { name: 'Vibe & Werte', href: '#values' },
     { name: 'Events', href: '#events' },
+    { name: 'Community', href: '#community' },
+    { name: 'Team', href: '#team' },
+    { name: 'FAQ', href: '#faq' },
+  ];
+
+  const faqs = [
+    {
+      q: 'Kostet die Teilnahme an den Meetups etwas?',
+      a: 'Nein, alle KryptoKölsch Meetups sind 100% kostenlos und für jeden zugänglich. Du zahlst lediglich deine eigenen Getränke (oder kommst in den Genuss von gesponsertem Kölsch durch unsere Partner!).'
+    },
+    {
+      q: 'Ich bin kompletter Krypto-Neuling. Kann ich trotzdem kommen?',
+      a: 'Absolut! KryptoKölsch lebt von Vielfalt. Egal ob du gerade deine erste Wallet eingerichtet hast oder Smart Contracts auf L2s deployest: Bei uns gibt es kein Gatekeeping. Jeder lernt von jedem.'
+    },
+    {
+      q: 'Wo und wie oft finden die Treffen statt?',
+      a: 'Wir treffen uns in der Regel monatlich – meistens im STARTPLATZ Köln am Mediapark, im Blockchain Reallabor oder in urigen Kölner Brauhäusern. Alle genauen Daten findest du in unserem Luma-Kalender.'
+    },
+    {
+      q: 'Kann ich einen Talk oder Workshop bei euch halten?',
+      a: 'Sehr gerne! Wenn du ein spannendes Web3-Projekt, technische Insights, rechtliche Aspekte oder Forschungsergebnisse teilen möchtest (ohne reinen Sales-Pitch), schreib Alex oder Flo direkt auf LinkedIn oder in WhatsApp an.'
+    },
+    {
+      q: 'Welches Kölsch wird getrunken?',
+      a: 'Reissdorf, Gaffel, Früh, Mühlen oder Schreckenskammer – wir sind offen für alle Kölner Brauereien, Hauptsache frisch, kalt und in bester Gesellschaft! 🍻'
+    }
   ];
 
   return (
-    <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-ink)] font-sans selection:bg-[var(--color-brand)] selection:text-white">
+    <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-ink)] font-sans selection:bg-[var(--color-brand)] selection:text-black relative overflow-x-hidden">
 
-      {/* Background Ambience */}
+      {/* --- Ambient Background Glows & Noise Texture --- */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-[var(--color-brand)]/10 blur-[120px] rounded-full mix-blend-screen"></div>
-        <div className="absolute bottom-[-10%] right-[-5%] w-[40%] h-[60%] bg-[var(--color-brand)]/5 blur-[100px] rounded-full mix-blend-screen"></div>
-        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay"></div>
+        {/* Subtle grid pattern */}
+        <div className="absolute inset-0 bg-grid-pattern opacity-40"></div>
+        {/* Ambient Warm Amber Light Orbs */}
+        <div className="absolute top-[-15%] left-[-10%] w-[600px] md:w-[900px] h-[600px] md:h-[900px] bg-[var(--color-brand)]/[0.08] blur-[150px] rounded-full mix-blend-screen pointer-events-none"></div>
+        <div className="absolute top-[35%] right-[-15%] w-[500px] md:w-[750px] h-[500px] md:h-[750px] bg-[var(--color-brand-amber)]/[0.06] blur-[160px] rounded-full mix-blend-screen pointer-events-none"></div>
+        <div className="absolute bottom-[10%] left-[5%] w-[600px] h-[600px] bg-[#38BDF8]/[0.03] blur-[180px] rounded-full mix-blend-screen pointer-events-none"></div>
+        {/* Fine Noise Texture */}
+        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.14] mix-blend-overlay pointer-events-none"></div>
       </div>
 
-      {/* Header Navigation */}
-      <header className={`fixed top-0 w-full z-50 transition-all duration-500 border-b ${isScrolled ? 'bg-[var(--color-bg)]/80 backdrop-blur-xl border-white/5 py-4 shadow-lg shadow-black/20' : 'bg-transparent border-transparent py-6'}`}>
-        <div className="max-w-7xl mx-auto px-6 md:px-12 flex justify-between items-center">
-          <a href="#" className="flex items-center gap-3 relative z-10 group">
-            <div className="relative w-10 h-10 overflow-hidden rounded-xl bg-white/5 border border-white/10 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
-              <img src="/kryptokoelsch_logo_new.jpg" alt="Logo" className="w-10 h-10 object-cover" />
+      {/* --- Header Navigation --- */}
+      <header className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+        isScrolled 
+          ? 'bg-[var(--color-dark-950)]/85 backdrop-blur-xl border-b border-white/[0.08] py-3.5 shadow-2xl shadow-black/40' 
+          : 'bg-transparent border-b border-transparent py-5'
+      }`}>
+        <div className="max-w-7xl mx-auto px-5 md:px-10 flex justify-between items-center">
+          
+          {/* Logo & Brand Identity */}
+          <a href="#" className="flex items-center gap-3.5 group relative z-10">
+            <div className="relative w-10 h-10 rounded-xl overflow-hidden bg-white/5 border border-white/10 p-1 flex items-center justify-center transition-all duration-300 group-hover:scale-105 group-hover:border-[var(--color-brand)]/50 group-hover:shadow-[0_0_20px_rgba(255,149,0,0.3)]">
+              <img 
+                src="/kryptokoelsch_logo.png" 
+                onError={(e) => { (e.target as HTMLElement).setAttribute('src', '/kryptokoelsch_logo_new.jpg'); }} 
+                alt="KryptoKoelsch Logo" 
+                className="w-full h-full object-contain" 
+              />
             </div>
-            <span className="font-serif font-bold text-xl tracking-tight text-white transition-colors group-hover:text-[var(--color-brand)]">KryptoKoelsch</span>
+            <div className="flex flex-col">
+              <span className="font-serif font-bold text-lg md:text-xl tracking-tight text-white transition-colors group-hover:text-[var(--color-brand)] flex items-center gap-1.5">
+                KryptoKölsch
+                <span className="inline-block w-1.5 h-1.5 rounded-full bg-[var(--color-brand)] animate-pulse"></span>
+              </span>
+              <span className="text-[10px] tracking-wider uppercase text-white/40 font-mono -mt-0.5">
+                Rheinland Web3
+              </span>
+            </div>
           </a>
 
-          <nav className="hidden md:flex items-center gap-10">
+          {/* Desktop Nav Links */}
+          <nav className="hidden lg:flex items-center gap-8">
             {navLinks.map((link) => (
-              <a key={link.name} href={link.href} className="text-sm font-medium text-white/70 hover:text-white transition-colors relative after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[2px] after:bg-[var(--color-brand)] hover:after:w-full after:transition-all after:duration-300">
+              <a 
+                key={link.name} 
+                href={link.href} 
+                className="text-sm font-medium text-white/70 hover:text-white transition-colors relative py-1 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-[var(--color-brand)] hover:after:w-full after:transition-all after:duration-200"
+              >
                 {link.name}
               </a>
             ))}
-            <a href="https://chat.whatsapp.com/GSfXAf71lQT0UvW6LRh9wv" target="_blank" rel="noopener noreferrer" className="bg-white/10 hover:bg-white/20 border border-white/10 text-white px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 flex items-center gap-2">
-              <MessageCircle size={16} />
-              Beitreten
-            </a>
           </nav>
 
-          <button className="md:hidden text-white relative z-10 p-2" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          {/* Header Action Buttons */}
+          <div className="hidden sm:flex items-center gap-3">
+            {/* Quick Cheers Button */}
+            <button
+              onClick={handleCheers}
+              title="Virtuell anstoßen!"
+              className="relative overflow-hidden flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-white/80 hover:text-white text-xs font-semibold transition-all duration-200 active:scale-95 group"
+            >
+              <Beer size={16} className="text-[var(--color-brand)] group-hover:rotate-12 transition-transform" />
+              <span>Prost!</span>
+              <span className="bg-[var(--color-brand)]/20 text-[var(--color-brand)] px-1.5 py-0.5 rounded font-mono text-[11px]">
+                {cheersCount}
+              </span>
+              {showCheerAnim && (
+                <span className="absolute inset-0 bg-[var(--color-brand)]/20 animate-ping rounded-xl"></span>
+              )}
+            </button>
+
+            {/* WhatsApp Community Button */}
+            <a 
+              href="https://chat.whatsapp.com/GSfXAf71lQT0UvW6LRh9wv" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="relative group overflow-hidden bg-[var(--color-brand)] hover:bg-[var(--color-brand-light)] text-black px-4.5 py-2.5 rounded-xl text-xs md:text-sm font-bold transition-all duration-300 flex items-center gap-2 shadow-[0_0_20px_rgba(255,149,0,0.25)] hover:shadow-[0_0_25px_rgba(255,149,0,0.45)] hover:-translate-y-0.5"
+            >
+              <MessageCircle size={16} className="fill-black/20" />
+              <span>Community Beitreten</span>
+            </a>
+          </div>
+
+          {/* Mobile Hamburger Button */}
+          <button 
+            className="lg:hidden text-white/90 hover:text-white p-2 rounded-lg bg-white/5 border border-white/10" 
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label="Menü öffnen"
+          >
+            {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
         </div>
       </header>
 
-      {/* Mobile Menu */}
+      {/* --- Mobile Fullscreen Navigation Drawer --- */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-40 bg-[var(--color-bg)]/95 backdrop-blur-2xl px-6 pt-32 pb-10 flex flex-col md:hidden"
+            transition={{ duration: 0.25 }}
+            className="fixed inset-0 z-40 bg-[var(--color-dark-950)]/98 backdrop-blur-2xl px-6 pt-28 pb-8 flex flex-col justify-between lg:hidden border-b border-white/10"
           >
-            <div className="flex flex-col gap-8 text-2xl font-serif mt-10">
+            <div className="flex flex-col gap-5 text-xl font-serif">
               {navLinks.map((link, idx) => (
                 <motion.a
                   key={link.name}
                   href={link.href}
-                  initial={{ opacity: 0, x: -20 }}
+                  initial={{ opacity: 0, x: -15 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: idx * 0.1 }}
+                  transition={{ delay: idx * 0.05 }}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="text-white/80 hover:text-white border-b border-white/5 pb-4 flex items-center justify-between"
+                  className="text-white/80 hover:text-[var(--color-brand)] py-2 border-b border-white/[0.06] flex items-center justify-between transition-colors"
                 >
                   {link.name}
-                  <ChevronRight className="text-white/20" />
+                  <ChevronRight size={18} className="text-white/30" />
                 </motion.a>
               ))}
             </div>
-            <div className="mt-auto">
+
+            <div className="space-y-3 pt-6 border-t border-white/10">
+              <button
+                onClick={handleCheers}
+                className="w-full bg-white/5 border border-white/10 text-white flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold"
+              >
+                <Beer size={18} className="text-[var(--color-brand)]" />
+                <span>Virtuell Anstoßen ({cheersCount} Kölsch gezapft)</span>
+              </button>
+
               <a
                 href="https://chat.whatsapp.com/GSfXAf71lQT0UvW6LRh9wv"
-                target="_blank" rel="noopener noreferrer"
+                target="_blank" 
+                rel="noopener noreferrer"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="w-full bg-[var(--color-brand)] text-[var(--color-bg)] text-center flex items-center justify-center gap-3 px-6 py-4 rounded-2xl text-lg font-bold transition-transform active:scale-95"
+                className="w-full bg-[var(--color-brand)] text-black font-bold text-center flex items-center justify-center gap-2.5 py-3.5 rounded-xl text-base shadow-lg shadow-[var(--color-brand)]/20"
               >
-                <MessageCircle size={20} />
-                WhatsApp Community
+                <MessageCircle size={18} />
+                WhatsApp Community beitreten
               </a>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
+      {/* --- Main Page Content --- */}
       <main className="relative z-10">
 
-        {/* --- Hero Section --- */}
-        <section className="relative min-h-[100vh] flex flex-col items-center justify-between overflow-hidden pt-32 pb-10 px-6">
-          <div className="w-full shrink-0"></div> {/* Top Spacer */}
-
-          <div className="absolute inset-0 flex items-center justify-center opacity-30 pointer-events-none">
+        {/* ========================================================================= */}
+        {/* 1. HERO SECTION                                                          */}
+        {/* ========================================================================= */}
+        <section className="relative min-h-[92vh] flex flex-col justify-center items-center pt-32 pb-20 px-5 md:px-8 overflow-hidden">
+          
+          {/* Subtle Background Radial Tech Rings */}
+          <div className="absolute inset-0 flex items-center justify-center opacity-25 pointer-events-none select-none">
             <motion.div
               animate={{ rotate: 360 }}
-              transition={{ duration: 150, repeat: Infinity, ease: "linear" }}
-              className="w-[800px] h-[800px] rounded-full border border-white/5 border-dashed"
+              transition={{ duration: 180, repeat: Infinity, ease: "linear" }}
+              className="w-[700px] md:w-[950px] h-[700px] md:h-[950px] rounded-full border border-dashed border-white/10"
             />
             <motion.div
               animate={{ rotate: -360 }}
-              transition={{ duration: 200, repeat: Infinity, ease: "linear" }}
-              className="absolute w-[1200px] h-[1200px] rounded-full border border-[var(--color-brand)]/5"
+              transition={{ duration: 240, repeat: Infinity, ease: "linear" }}
+              className="absolute w-[1100px] md:w-[1400px] h-[1100px] md:h-[1400px] rounded-full border border-[var(--color-brand)]/10"
             />
           </div>
 
-          <div className="max-w-5xl mx-auto text-center relative z-10 my-auto py-10">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1, ease: "easeOut" }}
-            >
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-md mb-8">
-                <span className="w-2 h-2 rounded-full bg-[var(--color-brand)] animate-pulse"></span>
-                <span className="text-xs font-medium tracking-wide text-white/80 uppercase">Blockchain Community Rheinland</span>
+          <div className="max-w-5xl mx-auto text-center relative z-10">
+            
+            {/* Live Status Pill */}
+            <FadeIn>
+              <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white/[0.05] border border-white/10 backdrop-blur-xl mb-8 shadow-inner hover:border-[var(--color-brand)]/40 transition-colors">
+                <span className="relative flex h-2.5 w-2.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--color-brand)] opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[var(--color-brand)]"></span>
+                </span>
+                <span className="text-xs font-semibold tracking-wider text-white/90 uppercase font-mono">
+                  Köln & Rheinland • Web3 & Krypto Community
+                </span>
               </div>
-            </motion.div>
+            </FadeIn>
 
-            <h1 className="text-6xl md:text-8xl lg:text-[7rem] font-serif font-bold leading-[1.05] tracking-tight mb-8 text-white">
-              Blockchain. Krypto. <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-brand)] to-[#ff7b00]">Koelsch.</span>
-            </h1>
+            {/* Display Headline */}
+            <FadeIn delay={0.1}>
+              <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-[6.5rem] font-serif font-extrabold leading-[1.04] tracking-tight mb-7 text-white">
+                Blockchain. Krypto. <br />
+                <span className="gradient-text-amber">Kölsche Kultur.</span>
+              </h1>
+            </FadeIn>
 
+            {/* Hero Subtitle */}
             <FadeIn delay={0.2}>
-              <p className="text-xl md:text-2xl text-white/60 mb-12 max-w-2xl mx-auto leading-relaxed font-light">
-                Lerne, netzwerke & gestalte die dezentrale Zukunft – bei einem kühlen Kölsch. 🍺
+              <p className="text-lg sm:text-xl md:text-2xl text-white/70 mb-10 max-w-3xl mx-auto leading-relaxed font-light text-pretty">
+                Die dezentrale Community im Rheinland. Wo Solidity-Devs, Krypto-Pioniere und Neugierige bei ’nem kühlen Kölsch die Zukunft des Web3 gestalten – ganz ohne Bullshit und Gatekeeping.
               </p>
             </FadeIn>
 
-            <FadeIn delay={0.4} className="flex flex-col sm:flex-row items-center justify-center gap-5">
-              <a href="https://chat.whatsapp.com/GSfXAf71lQT0UvW6LRh9wv" target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto bg-[var(--color-brand)] hover:bg-[var(--color-brand-light)] text-[var(--color-bg)] px-8 py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all duration-300 hover:shadow-[0_0_30px_rgba(255,153,0,0.4)] hover:-translate-y-1">
-                Community Beitreten
+            {/* Hero Action Buttons */}
+            <FadeIn delay={0.3} className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+              <a 
+                href="https://chat.whatsapp.com/GSfXAf71lQT0UvW6LRh9wv" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="w-full sm:w-auto bg-[var(--color-brand)] hover:bg-[var(--color-brand-light)] text-black px-8 py-4 rounded-2xl font-bold text-base flex items-center justify-center gap-2.5 transition-all duration-300 shadow-[0_0_30px_rgba(255,149,0,0.35)] hover:shadow-[0_0_40px_rgba(255,149,0,0.55)] hover:-translate-y-1 active:translate-y-0"
+              >
+                <MessageCircle size={20} className="fill-black/10" />
+                <span>WhatsApp Community Beitreten</span>
                 <ArrowRight size={18} />
               </a>
-              <a href="#about" className="w-full sm:w-auto bg-white/5 hover:bg-white/10 text-white border border-white/10 px-8 py-4 rounded-xl font-medium transition-all duration-300 flex items-center justify-center gap-2 hover:-translate-y-1">
-                Mehr erfahren
+
+              <a 
+                href="#events" 
+                className="w-full sm:w-auto bg-white/[0.04] hover:bg-white/[0.08] text-white border border-white/10 hover:border-white/25 px-8 py-4 rounded-2xl font-semibold text-base transition-all duration-300 flex items-center justify-center gap-2.5 hover:-translate-y-1 backdrop-blur-md"
+              >
+                <Calendar size={18} className="text-[var(--color-brand)]" />
+                <span>Nächstes Meetup ansehen</span>
               </a>
             </FadeIn>
+
+            {/* Hero Stats & Highlights Grid */}
+            <FadeIn delay={0.4} className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 max-w-4xl mx-auto">
+              {[
+                { number: "500+", label: "Community Member", sub: "Builder, Devs & HODLer" },
+                { number: "25+", label: "Meetups veranstaltet", sub: "Im STARTPLATZ & Brauhäusern" },
+                { number: "100%", label: "Kostenlos & Offen", sub: "Kein Eintritt, kein Gatekeeping" },
+                { number: "0%", label: "Sales & Shilling", sub: "Reiner Wissensaustausch" },
+              ].map((stat, idx) => (
+                <div 
+                  key={idx} 
+                  className="glass-card p-4 md:p-5 rounded-2xl text-center relative overflow-hidden group hover:border-[var(--color-brand)]/40 transition-all duration-300"
+                >
+                  <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[var(--color-brand)]/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  <div className="font-serif font-black text-2xl md:text-3xl text-white mb-1 tracking-tight group-hover:text-[var(--color-brand)] transition-colors">
+                    {stat.number}
+                  </div>
+                  <div className="text-xs font-semibold text-white/90 uppercase tracking-wider mb-0.5">
+                    {stat.label}
+                  </div>
+                  <div className="text-[11px] text-white/40 hidden sm:block">
+                    {stat.sub}
+                  </div>
+                </div>
+              ))}
+            </FadeIn>
+
           </div>
 
-          {/* Scroll Indicator */}
-          <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            className="flex flex-col items-center gap-2 text-white/30 shrink-0 relative z-10"
-          >
-            <span className="text-xs font-medium tracking-widest uppercase">Scroll</span>
-            <div className="w-px h-12 bg-gradient-to-b from-white/30 to-transparent"></div>
-          </motion.div>
+          {/* Floating Kölsch Bubbles when toast is clicked */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden z-20">
+            {bubbles.map((b) => (
+              <span
+                key={b.id}
+                className="bubble"
+                style={{
+                  left: `${b.left}%`,
+                  bottom: '15%',
+                  width: `${b.size}px`,
+                  height: `${b.size}px`,
+                }}
+              />
+            ))}
+          </div>
+
         </section>
 
-        {/* --- About & Founders Section --- */}
-        <section id="about" className="py-32 px-6 border-t border-white/5 relative bg-[var(--color-bg)]">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-2xl h-[1px] bg-gradient-to-r from-transparent via-[var(--color-brand)]/20 to-transparent"></div>
 
+        {/* ========================================================================= */}
+        {/* 2. PARTNERS & ECOSYSTEM INFINITE TICKER                                  */}
+        {/* ========================================================================= */}
+        <section className="py-14 border-y border-white/[0.08] bg-[var(--color-dark-900)]/60 relative overflow-hidden">
+          {/* Gradient Edge Masks for soft fade */}
+          <div className="absolute inset-y-0 left-0 w-24 md:w-48 bg-gradient-to-r from-[var(--color-dark-950)] to-transparent z-10 pointer-events-none"></div>
+          <div className="absolute inset-y-0 right-0 w-24 md:w-48 bg-gradient-to-l from-[var(--color-dark-950)] to-transparent z-10 pointer-events-none"></div>
+
+          <div className="max-w-7xl mx-auto px-6 mb-8 text-center">
+            <span className="text-[11px] font-mono font-semibold tracking-[0.25em] text-white/40 uppercase">
+              Partner, Hosts & Starkes Rheinland Ökosystem
+            </span>
+          </div>
+
+          <div className="flex w-[200%] animate-marquee select-none items-center">
+            {/* Set 1 */}
+            <div className="flex w-1/2 justify-around items-center gap-12 px-6 opacity-75 hover:opacity-100 transition-opacity duration-300">
+              <img src="/partners/solana-superteam.png" alt="Solana Superteam" className="h-9 md:h-11 object-contain filter grayscale brightness-150 contrast-125 hover:grayscale-0 hover:brightness-100 transition-all duration-300 hover:scale-105" />
+              <img src="/partners/base.png" alt="Base" className="h-8 md:h-10 object-contain filter grayscale brightness-150 hover:grayscale-0 hover:brightness-100 transition-all duration-300 hover:scale-105" />
+              <img src="/partners/startplatz.png" alt="Startplatz Köln" className="h-9 md:h-11 object-contain filter grayscale brightness-150 hover:grayscale-0 hover:brightness-100 transition-all duration-300 hover:scale-105" />
+              <img src="/partners/blockchain-reallabor.png" alt="Blockchain Reallabor" className="h-9 md:h-11 object-contain filter grayscale brightness-150 hover:grayscale-0 hover:brightness-100 transition-all duration-300 hover:scale-105" />
+              <img src="/partners/aachen-blockchain.png" alt="Aachen Blockchain" className="h-11 md:h-14 object-contain filter grayscale brightness-150 hover:grayscale-0 hover:brightness-100 transition-all duration-300 hover:scale-105" />
+            </div>
+
+            {/* Set 2 (Duplicate for Seamless Loop) */}
+            <div className="flex w-1/2 justify-around items-center gap-12 px-6 opacity-75 hover:opacity-100 transition-opacity duration-300">
+              <img src="/partners/solana-superteam.png" alt="Solana Superteam" className="h-9 md:h-11 object-contain filter grayscale brightness-150 contrast-125 hover:grayscale-0 hover:brightness-100 transition-all duration-300 hover:scale-105" />
+              <img src="/partners/base.png" alt="Base" className="h-8 md:h-10 object-contain filter grayscale brightness-150 hover:grayscale-0 hover:brightness-100 transition-all duration-300 hover:scale-105" />
+              <img src="/partners/startplatz.png" alt="Startplatz Köln" className="h-9 md:h-11 object-contain filter grayscale brightness-150 hover:grayscale-0 hover:brightness-100 transition-all duration-300 hover:scale-105" />
+              <img src="/partners/blockchain-reallabor.png" alt="Blockchain Reallabor" className="h-9 md:h-11 object-contain filter grayscale brightness-150 hover:grayscale-0 hover:brightness-100 transition-all duration-300 hover:scale-105" />
+              <img src="/partners/aachen-blockchain.png" alt="Aachen Blockchain" className="h-11 md:h-14 object-contain filter grayscale brightness-150 hover:grayscale-0 hover:brightness-100 transition-all duration-300 hover:scale-105" />
+            </div>
+          </div>
+        </section>
+
+
+        {/* ========================================================================= */}
+        {/* 3. ABOUT SECTION (ORIGIN & MANIFEST)                                     */}
+        {/* ========================================================================= */}
+        <section id="about" className="py-28 md:py-36 px-5 md:px-10 relative">
           <div className="max-w-7xl mx-auto">
-            <div className="grid lg:grid-cols-2 gap-20 items-center">
-
-              <FadeIn className="space-y-8">
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-md">
-                  <span className="text-xs font-semibold tracking-wider text-[var(--color-brand)] uppercase">Wer wir sind</span>
+            <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+              
+              {/* Left Column: Story & Philosophy */}
+              <FadeIn className="lg:col-span-7 space-y-6">
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[var(--color-brand)]/10 border border-[var(--color-brand)]/30 text-[var(--color-brand)] text-xs font-semibold uppercase tracking-wider font-mono">
+                  <Flame size={14} />
+                  <span>Wer wir sind & Warum es uns gibt</span>
                 </div>
-                <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-white leading-tight">
-                  Die Köpfe hinter <br className="hidden md:block" /> <span className="text-white/40">Krypto</span>Koelsch.
+
+                <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-white leading-[1.1]">
+                  Web3 braucht echten Dialog, <br className="hidden sm:block" />
+                  <span className="gradient-text-amber">keine anonymen Feeds.</span>
                 </h2>
 
-                <div className="space-y-6 text-lg text-white/50 leading-relaxed font-light">
+                <div className="space-y-4 text-base md:text-lg text-white/70 leading-relaxed font-light">
                   <p>
-                    Wir sind <strong className="text-white font-medium">Alex und Flo</strong>. Wir haben KryptoKoelsch ins Leben gerufen, um unsere Leidenschaft für Blockchain, Krypto und Web3 mit dem Rheinland zu teilen. Wir glauben an die Kraft der Dezentralisierung und an den echten Dialog.
+                    KryptoKölsch wurde 2023 aus einer simplen Erkenntnis geboren: Die spannendsten Diskussionen über dezentrale Protokolle, KI-Agenten, Smart Contracts und die Zukunft des Internets entstehen nicht in endlosen Twitter-Threads – sondern wenn kluge Köpfe an einem Tisch sitzen und sich bei einem kühlen Kölsch in die Augen schauen.
                   </p>
                   <p>
-                    Keine Hypes. Keine Sales-Pitches. Nur gute Gespräche, ehrliches Networking und tiefes Eintauchen in die Technologien von morgen.
+                    Wir verbinden das Rheinische Lebensgefühl (offen, herzlich, unkompliziert) mit tiefem technologischem Enthusiasmus. Bei uns sitzen Gründer neben Studenten, Solo-Trader neben Core-Entwicklern und Neugierige neben Blockchain-Forschern.
                   </p>
                 </div>
 
-                <div className="pt-4 flex gap-8">
-                  <div>
-                    <div className="text-3xl font-serif font-bold text-white mb-1">2023</div>
-                    <div className="text-sm font-medium text-[var(--color-brand)] uppercase tracking-wider">Gegründet</div>
-                  </div>
-                  <div className="w-px bg-white/10"></div>
-                  <div>
-                    <div className="text-3xl font-serif font-bold text-white mb-1">Monatlich</div>
-                    <div className="text-sm font-medium text-[var(--color-brand)] uppercase tracking-wider">Meetups</div>
+                {/* Key Pillars Tags */}
+                <div className="pt-2 flex flex-wrap gap-2.5">
+                  <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs font-medium text-white/90">
+                    <ShieldCheck size={14} className="text-[var(--color-brand)]" />
+                    Keine Verkaufs-Pitches
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs font-medium text-white/90">
+                    <Code2 size={14} className="text-[var(--color-brand)]" />
+                    Devs & Builder First
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs font-medium text-white/90">
+                    <Beer size={14} className="text-[var(--color-brand)]" />
+                    100% Kölner Herzlichkeit
+                  </span>
+                </div>
+              </FadeIn>
+
+              {/* Right Column: Visual Atmosphere Card */}
+              <FadeIn delay={0.2} className="lg:col-span-5">
+                <div className="relative rounded-3xl overflow-hidden border border-white/15 bg-gradient-to-b from-white/10 to-white/[0.02] p-2 shadow-2xl group">
+                  <div className="relative rounded-2xl overflow-hidden aspect-[4/3] bg-[var(--color-dark-900)]">
+                    <img 
+                      src="/meetup.jpg" 
+                      alt="KryptoKölsch Meetup Vibe" 
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 brightness-90"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-dark-950)] via-[var(--color-dark-950)]/40 to-transparent"></div>
+                    
+                    {/* Bottom floating badge */}
+                    <div className="absolute bottom-4 left-4 right-4 glass-panel p-4 rounded-xl border border-white/10 flex items-center justify-between">
+                      <div>
+                        <div className="text-xs font-semibold text-white">Monatliche Meetups</div>
+                        <div className="text-[11px] text-[var(--color-brand)] font-mono">📍 STARTPLATZ & Kölner Brauhäuser</div>
+                      </div>
+                      <div className="w-8 h-8 rounded-lg bg-[var(--color-brand)] text-black flex items-center justify-center font-bold text-xs">
+                        🍻
+                      </div>
+                    </div>
                   </div>
                 </div>
               </FadeIn>
 
-              <div className="grid sm:grid-cols-2 gap-6 relative">
-                {/* Decorative background element for cards */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-[var(--color-brand)]/5 blur-3xl rounded-full -z-10"></div>
-
-                <FadeIn delay={0.2} className="group relative bg-[#1A1A1A] border border-white/5 rounded-3xl p-8 hover:bg-[#222] transition-colors duration-500 overflow-hidden isolate">
-                  <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-brand)]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10"></div>
-                  <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-white/10 mb-6 group-hover:border-[var(--color-brand)]/50 transition-colors duration-500">
-                    <img src="/alex.jpg" alt="Alex" className="w-full h-full object-cover filter grayscale group-hover:grayscale-0 transition-all duration-700" />
-                  </div>
-                  <h3 className="text-2xl font-serif font-bold text-white mb-1">Alex</h3>
-                  <p className="text-sm text-white/40 mb-4 font-mono">aka m0ebius</p>
-                  <p className="text-[var(--color-brand)] font-medium mb-8">Community Builder 🏗️</p>
-
-                  <a href="https://www.linkedin.com/in/alexander-rene-rheindorf/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm font-medium text-white/50 hover:text-white transition-colors group/link">
-                    <Linkedin size={18} />
-                    <span>LinkedIn Profil</span>
-                    <ExternalLink size={14} className="opacity-0 -translate-x-2 group-hover/link:opacity-100 group-hover/link:translate-x-0 transition-all" />
-                  </a>
-                </FadeIn>
-
-                <FadeIn delay={0.4} className="group relative bg-[#1A1A1A] border border-white/5 rounded-3xl p-8 hover:bg-[#222] transition-colors duration-500 overflow-hidden isolate sm:translate-y-12">
-                  <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-brand)]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10"></div>
-                  <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-white/10 mb-6 group-hover:border-[var(--color-brand)]/50 transition-colors duration-500">
-                    <img src="/flo.jpg" alt="Flo" className="w-full h-full object-cover filter grayscale group-hover:grayscale-0 transition-all duration-700" />
-                  </div>
-                  <h3 className="text-2xl font-serif font-bold text-white mb-1">Flo</h3>
-                  <p className="text-sm text-white/40 mb-4 font-mono">aka 0xBoxer</p>
-                  <p className="text-[var(--color-brand)] font-medium mb-8">Data Wizard 🧙‍♂️</p>
-
-                  <a href="https://www.linkedin.com/in/florian-ba/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm font-medium text-white/50 hover:text-white transition-colors group/link">
-                    <Linkedin size={18} />
-                    <span>LinkedIn Profil</span>
-                    <ExternalLink size={14} className="opacity-0 -translate-x-2 group-hover/link:opacity-100 group-hover/link:translate-x-0 transition-all" />
-                  </a>
-                </FadeIn>
-              </div>
-
             </div>
           </div>
         </section>
 
-        {/* --- Partners Marquee Section --- */}
-        <section className="py-20 border-y border-white/5 bg-[#0a0a0a] overflow-hidden relative">
-          {/* Soft gradient edge masking */}
-          <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#0a0a0a] to-transparent z-10"></div>
-          <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#0a0a0a] to-transparent z-10"></div>
 
-          <div className="max-w-7xl mx-auto px-6 mb-12 text-center text-white/40 text-sm tracking-widest uppercase font-medium">
-            Unsere Partner & Community
-          </div>
-
-          <div className="flex w-[200%] animate-marquee">
-            {/* First Set */}
-            <div className="flex w-1/2 justify-around items-center opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
-              <img src="/partners/solana-superteam.png" alt="Solana Superteam" className="h-12 object-contain hover:scale-110 transition-transform" />
-              <img src="/partners/base.png" alt="Base" className="h-12 object-contain hover:scale-110 transition-transform" />
-              <img src="/partners/startplatz.png" alt="Startplatz" className="h-12 object-contain hover:scale-110 transition-transform" />
-              <img src="/partners/blockchain-reallabor.png" alt="Blockchain Reallabor" className="h-12 object-contain hover:scale-110 transition-transform" />
-              <img src="/partners/aachen-blockchain.png" alt="Aachen Blockchain" className="h-16 object-contain hover:scale-110 transition-transform" />
-            </div>
-            {/* Duplicated Set for Infinite Loop */}
-            <div className="flex w-1/2 justify-around items-center opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
-              <img src="/partners/solana-superteam.png" alt="Solana Superteam" className="h-12 object-contain hover:scale-110 transition-transform" />
-              <img src="/partners/base.png" alt="Base" className="h-12 object-contain hover:scale-110 transition-transform" />
-              <img src="/partners/startplatz.png" alt="Startplatz" className="h-12 object-contain hover:scale-110 transition-transform" />
-              <img src="/partners/blockchain-reallabor.png" alt="Blockchain Reallabor" className="h-12 object-contain hover:scale-110 transition-transform" />
-              <img src="/partners/aachen-blockchain.png" alt="Aachen Blockchain" className="h-16 object-contain hover:scale-110 transition-transform" />
-            </div>
-          </div>
-        </section>
-
-        {/* --- Mission Section --- */}
-        <section id="mission" className="py-32 px-6 relative">
+        {/* ========================================================================= */}
+        {/* 4. VALUES & COMMUNITY BENTO GRID                                         */}
+        {/* ========================================================================= */}
+        <section id="values" className="py-28 md:py-36 px-5 md:px-10 bg-[var(--color-dark-900)]/40 border-t border-white/[0.08] relative">
           <div className="max-w-7xl mx-auto">
-            <FadeIn className="text-center mb-20">
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-white mb-6">Unser <span className="text-[var(--color-brand)]">Ziel</span></h2>
-              <p className="text-xl text-white/50 max-w-2xl mx-auto font-light">
-                Warum wir tun, was wir tun. Das Rheinland zum Web3-Hub machen.
+            
+            <FadeIn className="text-center max-w-3xl mx-auto mb-16 md:mb-20">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-semibold uppercase tracking-wider font-mono text-white/80 mb-4">
+                <Sparkles size={14} className="text-[var(--color-brand)]" />
+                <span>Die KryptoKölsch DNA</span>
+              </div>
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-white leading-tight">
+                Warum unsere Community <br />
+                <span className="gradient-text-amber">anders tickt.</span>
+              </h2>
+              <p className="text-base md:text-lg text-white/60 mt-4 font-light">
+                Vier Grundpfeiler, die jedes KryptoKölsch Treffen unvergesslich machen.
               </p>
             </FadeIn>
 
+            {/* Modern Bento Grid Layout */}
             <div className="grid md:grid-cols-3 gap-6">
-              {[
-                { icon: "🔗", title: "Community", desc: "Eine Gemeinschaft schaffen, in der sich Krypto-Interessierte, Experten und Neugierige in entspannter Atmosphäre austauschen können." },
-                { icon: "🗣️", title: "Austausch", desc: "Ob tief in der Materie oder Neuling – bei unseren Meetups & Events findest du spannende Gespräche auf Augenhöhe." },
-                { icon: "🚀", title: "Innovation", desc: "Lass uns gemeinsam das Blockchain-Ökosystem und die Web3-Adoption im Rheinland und darüber hinaus vorantreiben." }
-              ].map((item, idx) => (
-                <FadeIn key={idx} delay={idx * 0.15} className="bg-white/[0.02] border border-white/5 hover:border-white/10 p-10 rounded-[2rem] hover:bg-white/[0.04] transition-all duration-500 group">
-                  <div className="text-4xl mb-8 transform group-hover:scale-110 group-hover:-rotate-6 transition-transform duration-500 inline-block p-4 rounded-2xl bg-white/5">
-                    {item.icon}
+              
+              {/* Bento Card 1 (Span 2) */}
+              <FadeIn delay={0.1} className="md:col-span-2 glass-card glass-card-hover p-8 md:p-10 rounded-3xl relative overflow-hidden flex flex-col justify-between group">
+                <div className="absolute top-0 right-0 w-80 h-80 bg-[var(--color-brand)]/[0.06] rounded-full blur-3xl -z-10 pointer-events-none"></div>
+                
+                <div>
+                  <div className="w-14 h-14 rounded-2xl bg-[var(--color-brand)]/10 border border-[var(--color-brand)]/30 flex items-center justify-center text-2xl mb-6 text-[var(--color-brand)] group-hover:scale-110 transition-transform">
+                    🍺
                   </div>
-                  <h3 className="text-2xl font-serif font-bold text-white mb-4">{item.title}</h3>
-                  <p className="text-white/50 leading-relaxed font-light">{item.desc}</p>
-                </FadeIn>
-              ))}
+                  <h3 className="text-2xl md:text-3xl font-serif font-bold text-white mb-3">
+                    „Drink doch ene met“ – Rheinische Geselligkeit
+                  </h3>
+                  <p className="text-white/65 leading-relaxed font-light text-base md:text-lg">
+                    Keine steifen Konferenz-Vorträge, kein Krypto-Snobismus. Wir glauben, dass die besten Ideen bei einem gemeinsamen Glas Kölsch entstehen. Bei uns duzt sich jeder, jeder kommt zu Wort und Fragen aller Art sind ausdrücklich erwünscht.
+                  </p>
+                </div>
+
+                <div className="mt-8 pt-6 border-t border-white/[0.08] flex items-center gap-4 text-xs font-mono text-[var(--color-brand)]">
+                  <span>#Offenheit</span>
+                  <span>#Gemeinschaft</span>
+                  <span>#KölscheSeele</span>
+                </div>
+              </FadeIn>
+
+              {/* Bento Card 2 */}
+              <FadeIn delay={0.2} className="glass-card glass-card-hover p-8 md:p-10 rounded-3xl relative overflow-hidden flex flex-col justify-between group">
+                <div>
+                  <div className="w-14 h-14 rounded-2xl bg-sky-500/10 border border-sky-500/30 flex items-center justify-center text-2xl mb-6 text-sky-400 group-hover:scale-110 transition-transform">
+                    ⚡
+                  </div>
+                  <h3 className="text-2xl font-serif font-bold text-white mb-3">
+                    Deep Dives & Tech
+                  </h3>
+                  <p className="text-white/65 leading-relaxed font-light text-sm md:text-base">
+                    Von Solana über Base und Ethereum bis hin zu AI Agents, Zero-Knowledge Rollups und Token Engineering. Wir schauen unter die Haube der Technologie.
+                  </p>
+                </div>
+
+                <div className="mt-8 pt-6 border-t border-white/[0.08] text-xs font-mono text-sky-400">
+                  #Solidity #Solana #Base #AI
+                </div>
+              </FadeIn>
+
+              {/* Bento Card 3 */}
+              <FadeIn delay={0.3} className="glass-card glass-card-hover p-8 md:p-10 rounded-3xl relative overflow-hidden flex flex-col justify-between group">
+                <div>
+                  <div className="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-2xl mb-6 text-amber-400 group-hover:scale-110 transition-transform">
+                    📍
+                  </div>
+                  <h3 className="text-2xl font-serif font-bold text-white mb-3">
+                    Mitten in Kölle
+                  </h3>
+                  <p className="text-white/65 leading-relaxed font-light text-sm md:text-base">
+                    Direkt im Herzen des Rheinlands. Wir nutzen erstklassige Locations wie den STARTPLATZ Köln, das Blockchain Reallabor und gemütliche Brauhäuser.
+                  </p>
+                </div>
+
+                <div className="mt-8 pt-6 border-t border-white/[0.08] text-xs font-mono text-amber-400">
+                  #Mediapark #Altstadt #Ehrenfeld
+                </div>
+              </FadeIn>
+
+              {/* Bento Card 4 (Span 2) */}
+              <FadeIn delay={0.4} className="md:col-span-2 glass-card glass-card-hover p-8 md:p-10 rounded-3xl relative overflow-hidden flex flex-col justify-between group">
+                <div className="absolute top-0 left-0 w-80 h-80 bg-emerald-500/[0.04] rounded-full blur-3xl -z-10 pointer-events-none"></div>
+
+                <div>
+                  <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-2xl mb-6 text-emerald-400 group-hover:scale-110 transition-transform">
+                    🛡️
+                  </div>
+                  <h3 className="text-2xl md:text-3xl font-serif font-bold text-white mb-3">
+                    100% Wissensaustausch – 0% Shilling & Sales
+                  </h3>
+                  <p className="text-white/65 leading-relaxed font-light text-base md:text-lg">
+                    Keine dubiosen Trading-Signale, keine bezahlten Promo-Vorträge und kein Pyramid-Scheme-Gequatsche. Bei KryptoKölsch geht es um technologischen Fortschritt, unternehmerischen Austausch und echte Web3-Entwicklung.
+                  </p>
+                </div>
+
+                <div className="mt-8 pt-6 border-t border-white/[0.08] flex items-center gap-4 text-xs font-mono text-emerald-400">
+                  <span>#Authentisch</span>
+                  <span>#EhrlichesNetworking</span>
+                  <span>#NoBullshit</span>
+                </div>
+              </FadeIn>
+
             </div>
+
           </div>
         </section>
 
-        {/* --- Events Section --- */}
-        <section id="events" className="py-32 px-6 bg-[#0a0a0a] border-y border-white/5 relative">
-          <div className="absolute top-0 right-1/4 w-[600px] h-[600px] bg-[var(--color-brand)]/5 blur-[120px] rounded-full mix-blend-screen pointer-events-none"></div>
 
-          <div className="max-w-5xl mx-auto relative z-10">
-            <FadeIn className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-white mb-6">Upcoming <span className="text-[var(--color-brand)]">Events</span></h2>
-              <p className="text-xl text-white/50 font-light">
-                Verpasse kein Meetup. Melde dich direkt über Luma an.
+        {/* ========================================================================= */}
+        {/* 5. EVENTS & LUMA CALENDAR SECTION                                        */}
+        {/* ========================================================================= */}
+        <section id="events" className="py-28 md:py-36 px-5 md:px-10 relative">
+          <div className="max-w-6xl mx-auto">
+            
+            <FadeIn className="text-center max-w-3xl mx-auto mb-14">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[var(--color-brand)]/10 border border-[var(--color-brand)]/30 text-[var(--color-brand)] text-xs font-semibold uppercase tracking-wider font-mono mb-4">
+                <Calendar size={14} />
+                <span>Meetups & Termine</span>
+              </div>
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-white leading-tight">
+                Upcoming <span className="gradient-text-amber">Events</span>
+              </h2>
+              <p className="text-base md:text-lg text-white/60 mt-4 font-light">
+                Sichere dir deinen Platz über Luma. Der Eintritt ist immer frei.
               </p>
             </FadeIn>
 
-            <FadeIn delay={0.2} className="relative bg-[#1A1A1A] border border-white/10 rounded-[2rem] overflow-hidden shadow-2xl shadow-black/50 p-2 md:p-6">
-              {/* Decorative Top Bar for the 'App' window look */}
-              <div className="flex items-center gap-2 mb-4 px-4 pt-2">
-                <div className="w-3 h-3 rounded-full bg-white/10"></div>
-                <div className="w-3 h-3 rounded-full bg-white/10"></div>
-                <div className="w-3 h-3 rounded-full bg-[var(--color-brand)]/50"></div>
+            {/* Featured Event Banner Card */}
+            <FadeIn delay={0.1} className="mb-10">
+              <div className="glass-card p-6 md:p-8 rounded-3xl border border-[var(--color-brand)]/30 bg-gradient-to-r from-[var(--color-brand)]/[0.08] via-white/[0.02] to-transparent relative overflow-hidden flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+                
+                <div className="space-y-3">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--color-brand)] text-black text-xs font-bold uppercase tracking-wider font-mono">
+                    <Clock size={13} />
+                    <span>Nächstes KryptoKölsch Meetup</span>
+                  </div>
+                  <h3 className="text-2xl md:text-3xl font-serif font-bold text-white">
+                    Base, Solana & AI Agents • Rheinland Web3 Edition
+                  </h3>
+                  <div className="flex flex-wrap items-center gap-y-2 gap-x-6 text-sm text-white/70">
+                    <span className="flex items-center gap-1.5">
+                      <Calendar size={15} className="text-[var(--color-brand)]" />
+                      Jeden Monat in Köln
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <MapPin size={15} className="text-[var(--color-brand)]" />
+                      STARTPLATZ Köln (Mediapark)
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <Users size={15} className="text-[var(--color-brand)]" />
+                      Free RSVP via Luma
+                    </span>
+                  </div>
+                </div>
+
+                <div className="shrink-0 w-full lg:w-auto">
+                  <a 
+                    href="https://luma.com/calendar/cal-By6C0aAuF3FgjeU" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="w-full lg:w-auto inline-flex items-center justify-center gap-2 bg-[var(--color-brand)] hover:bg-[var(--color-brand-light)] text-black font-bold px-6 py-3.5 rounded-xl text-sm transition-all duration-200 shadow-lg shadow-[var(--color-brand)]/20 hover:scale-105"
+                  >
+                    <span>Auf Luma teilnehmen</span>
+                    <ArrowUpRight size={16} />
+                  </a>
+                </div>
+
+              </div>
+            </FadeIn>
+
+            {/* Embedded Luma Calendar in macOS-Style Frosted Container */}
+            <FadeIn delay={0.2} className="relative rounded-3xl overflow-hidden glass-card border border-white/15 shadow-2xl p-2 md:p-5">
+              
+              {/* Top macOS-style bar */}
+              <div className="flex items-center justify-between pb-3 px-3 pt-1 border-b border-white/[0.06] mb-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-rose-500/80"></div>
+                  <div className="w-3 h-3 rounded-full bg-amber-500/80"></div>
+                  <div className="w-3 h-3 rounded-full bg-emerald-500/80"></div>
+                  <span className="text-xs font-mono text-white/40 ml-2">kryptokoelsch.lu.ma/events</span>
+                </div>
+                <div className="text-xs text-white/40 font-mono hidden sm:block">
+                  Live Event Calendar
+                </div>
               </div>
 
-              <div className="rounded-2xl overflow-hidden bg-white/5">
+              {/* Luma Iframe */}
+              <div className="rounded-2xl overflow-hidden bg-black/40 min-h-[580px]">
                 <iframe
                   id="luma-iframe"
                   src="https://lu.ma/embed/calendar/cal-By6C0aAuF3FgjeU/events"
                   width="100%"
-                  height="600"
+                  height="580"
                   frameBorder="0"
                   style={{ border: 'none', background: 'transparent' }}
                   allowFullScreen={false}
@@ -357,78 +728,320 @@ export default function App() {
               </div>
             </FadeIn>
 
-            <FadeIn delay={0.4} className="text-center mt-12">
-              <a href="https://luma.com/calendar/cal-By6C0aAuF3FgjeU" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-white/50 hover:text-white transition-colors group">
-                Alle Events auf Luma ansehen
-                <ExternalLink size={16} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+            {/* Direct Calendar Subscribe Links */}
+            <FadeIn delay={0.3} className="text-center mt-8">
+              <a 
+                href="https://luma.com/calendar/cal-By6C0aAuF3FgjeU" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="inline-flex items-center gap-2 text-white/60 hover:text-[var(--color-brand)] transition-colors text-sm font-medium group"
+              >
+                <span>Kalender direkt auf Luma abonnieren</span>
+                <ExternalLink size={15} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
               </a>
             </FadeIn>
+
           </div>
         </section>
 
-        {/* --- Global Call to Action --- */}
-        <section className="py-32 px-6 relative overflow-hidden bg-[var(--color-bg)]">
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-full max-w-[1000px] h-[300px] bg-[var(--color-brand)]/20 blur-[150px] rounded-[100%]"></div>
+
+        {/* ========================================================================= */}
+        {/* 6. FOUNDERS & TEAM SECTION                                               */}
+        {/* ========================================================================= */}
+        <section id="team" className="py-28 md:py-36 px-5 md:px-10 bg-[var(--color-dark-900)]/40 border-t border-white/[0.08] relative">
+          <div className="max-w-7xl mx-auto">
+            
+            <FadeIn className="text-center max-w-3xl mx-auto mb-16 md:mb-20">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-semibold uppercase tracking-wider font-mono text-white/80 mb-4">
+                <Users size={14} className="text-[var(--color-brand)]" />
+                <span>Initiatoren & Hosts</span>
+              </div>
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-white leading-tight">
+                Die Köpfe hinter <br />
+                <span className="gradient-text-amber">KryptoKölsch.</span>
+              </h2>
+              <p className="text-base md:text-lg text-white/60 mt-4 font-light">
+                Zwei Kölner Web3-Enthusiasten mit einer Mission: Die dezentrale Zukunft ins Rheinland bringen.
+              </p>
+            </FadeIn>
+
+            <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+              
+              {/* Founder 1: Alex */}
+              <FadeIn delay={0.1} className="glass-card glass-card-hover p-8 rounded-3xl relative overflow-hidden group">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--color-brand)]/[0.08] rounded-full blur-3xl -z-10 pointer-events-none"></div>
+
+                <div className="flex items-center gap-5 mb-6">
+                  <div className="w-20 h-20 rounded-2xl overflow-hidden border-2 border-white/10 group-hover:border-[var(--color-brand)]/60 transition-colors duration-300 relative shrink-0 shadow-lg">
+                    <img 
+                      src="/alex.jpg" 
+                      alt="Alex (m0ebius)" 
+                      className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" 
+                    />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-serif font-bold text-white flex items-center gap-2">
+                      Alex
+                      <span className="text-xs px-2 py-0.5 rounded-md bg-[var(--color-brand)]/20 text-[var(--color-brand)] font-mono font-normal">
+                        Founder
+                      </span>
+                    </h3>
+                    <p className="text-xs text-white/40 font-mono">aka m0ebius</p>
+                    <p className="text-sm font-semibold text-[var(--color-brand)] mt-1">
+                      Community Architect & Builder 🏗️
+                    </p>
+                  </div>
+                </div>
+
+                <p className="text-white/65 text-sm md:text-base leading-relaxed font-light mb-6">
+                  Leidenschaftlicher Web3-Enthusiast, Netzwerker und Gründer. Baut Brücken zwischen Tech-Startups, Krypto-Devs und der rheinischen Wirtschaft.
+                </p>
+
+                <a 
+                  href="https://www.linkedin.com/in/alexander-rene-rheindorf/" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-white/70 hover:text-[var(--color-brand)] transition-colors group/link font-mono"
+                >
+                  <Linkedin size={16} />
+                  <span>LinkedIn Profil</span>
+                  <ArrowUpRight size={14} className="group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform" />
+                </a>
+              </FadeIn>
+
+              {/* Founder 2: Flo */}
+              <FadeIn delay={0.2} className="glass-card glass-card-hover p-8 rounded-3xl relative overflow-hidden group">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/[0.08] rounded-full blur-3xl -z-10 pointer-events-none"></div>
+
+                <div className="flex items-center gap-5 mb-6">
+                  <div className="w-20 h-20 rounded-2xl overflow-hidden border-2 border-white/10 group-hover:border-[var(--color-brand)]/60 transition-colors duration-300 relative shrink-0 shadow-lg">
+                    <img 
+                      src="/flo.jpg" 
+                      alt="Flo (0xBoxer)" 
+                      className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" 
+                    />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-serif font-bold text-white flex items-center gap-2">
+                      Flo
+                      <span className="text-xs px-2 py-0.5 rounded-md bg-[var(--color-brand)]/20 text-[var(--color-brand)] font-mono font-normal">
+                        Co-Founder
+                      </span>
+                    </h3>
+                    <p className="text-xs text-white/40 font-mono">aka 0xBoxer</p>
+                    <p className="text-sm font-semibold text-[var(--color-brand)] mt-1">
+                      Data Wizard & On-Chain Analyst 🧙‍♂️
+                    </p>
+                  </div>
+                </div>
+
+                <p className="text-white/65 text-sm md:text-base leading-relaxed font-light mb-6">
+                  Data Scientist und Krypto-Stratege mit Vorliebe für Tokenomics, On-Chain-Daten und tiefgehende Blockchain-Analysen.
+                </p>
+
+                <a 
+                  href="https://www.linkedin.com/in/florian-ba/" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-white/70 hover:text-[var(--color-brand)] transition-colors group/link font-mono"
+                >
+                  <Linkedin size={16} />
+                  <span>LinkedIn Profil</span>
+                  <ArrowUpRight size={14} className="group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform" />
+                </a>
+              </FadeIn>
+
+            </div>
+
+          </div>
+        </section>
+
+
+        {/* ========================================================================= */}
+        {/* 7. FAQ ACCORDION SECTION                                                 */}
+        {/* ========================================================================= */}
+        <section id="faq" className="py-28 md:py-36 px-5 md:px-10 relative">
+          <div className="max-w-4xl mx-auto">
+            
+            <FadeIn className="text-center mb-16">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-semibold uppercase tracking-wider font-mono text-white/80 mb-4">
+                <Compass size={14} className="text-[var(--color-brand)]" />
+                <span>Häufige Fragen</span>
+              </div>
+              <h2 className="text-4xl md:text-5xl font-serif font-bold text-white leading-tight">
+                Alles, was du <span className="gradient-text-amber">wissen musst</span>
+              </h2>
+            </FadeIn>
+
+            <div className="space-y-4">
+              {faqs.map((faq, index) => {
+                const isOpen = openFaq === index;
+                return (
+                  <FadeIn key={index} delay={index * 0.05}>
+                    <div className="glass-card rounded-2xl border border-white/[0.08] overflow-hidden transition-colors">
+                      <button
+                        onClick={() => setOpenFaq(isOpen ? null : index)}
+                        className="w-full p-6 text-left flex items-center justify-between gap-4 text-white hover:text-[var(--color-brand)] transition-colors font-medium text-lg"
+                      >
+                        <span className="font-serif font-semibold">{faq.q}</span>
+                        <ChevronDown 
+                          size={20} 
+                          className={`text-white/40 shrink-0 transition-transform duration-300 ${isOpen ? 'rotate-180 text-[var(--color-brand)]' : ''}`} 
+                        />
+                      </button>
+                      <AnimatePresence>
+                        {isOpen && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.25 }}
+                          >
+                            <div className="px-6 pb-6 text-white/65 leading-relaxed font-light text-base border-t border-white/[0.04] pt-4">
+                              {faq.a}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  </FadeIn>
+                );
+              })}
+            </div>
+
+          </div>
+        </section>
+
+
+        {/* ========================================================================= */}
+        {/* 8. GLOBAL CALL TO ACTION                                                 */}
+        {/* ========================================================================= */}
+        <section id="community" className="py-28 md:py-36 px-5 md:px-10 relative overflow-hidden bg-[var(--color-dark-950)]">
+          {/* Glowing Ambient Dome */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div className="w-[800px] h-[350px] bg-[var(--color-brand)]/[0.14] blur-[160px] rounded-[100%]"></div>
           </div>
 
           <div className="max-w-4xl mx-auto text-center relative z-10">
-            <FadeIn className="bg-white/5 backdrop-blur-3xl border border-white/10 p-12 md:p-20 rounded-[3rem]">
-              <h2 className="text-4xl md:text-6xl font-serif font-bold text-white mb-6 leading-tight">
-                Werde Teil der <br /> <span className="text-[var(--color-brand)]">Bewegung</span>.
+            <FadeIn className="glass-card p-10 md:p-16 rounded-[2.5rem] border border-[var(--color-brand)]/30 relative overflow-hidden shadow-2xl">
+              
+              <div className="w-16 h-16 rounded-2xl bg-[var(--color-brand)]/20 border border-[var(--color-brand)]/40 mx-auto flex items-center justify-center text-3xl mb-6 text-[var(--color-brand)] shadow-[0_0_30px_rgba(255,149,0,0.3)]">
+                🍻
+              </div>
+
+              <h2 className="text-4xl md:text-6xl font-serif font-extrabold text-white mb-6 leading-tight">
+                Werde Teil der <br />
+                <span className="gradient-text-amber">KryptoKölsch Bewegung.</span>
               </h2>
-              <p className="text-xl text-white/60 font-light mb-12 max-w-xl mx-auto">
-                Komm vorbei, vernetze dich und gestalte die dezentrale Zukunft im Rheinland mit uns.
+
+              <p className="text-lg md:text-xl text-white/70 font-light mb-10 max-w-xl mx-auto text-pretty">
+                Tausch dich mit Gleichgesinnten aus, erfahre als Erster von neuen Meetup-Terminen und triff die führenden Web3-Köpfe im Rheinland.
               </p>
-              <a href="https://chat.whatsapp.com/GSfXAf71lQT0UvW6LRh9wv" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-3 bg-[var(--color-brand)] hover:bg-[var(--color-brand-light)] text-[var(--color-bg)] px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 hover:shadow-[0_0_40px_rgba(255,153,0,0.5)] hover:-translate-y-2">
-                <MessageCircle size={24} />
-                Zur WhatsApp Community
-              </a>
+
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a 
+                  href="https://chat.whatsapp.com/GSfXAf71lQT0UvW6LRh9wv" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-3 bg-[var(--color-brand)] hover:bg-[var(--color-brand-light)] text-black px-9 py-4.5 rounded-2xl font-bold text-base md:text-lg transition-all duration-300 shadow-[0_0_35px_rgba(255,149,0,0.4)] hover:shadow-[0_0_50px_rgba(255,149,0,0.65)] hover:-translate-y-1 active:translate-y-0"
+                >
+                  <MessageCircle size={22} className="fill-black/10" />
+                  <span>WhatsApp Gruppe beitreten</span>
+                  <ArrowRight size={18} />
+                </a>
+
+                <button
+                  onClick={handleCopyInvite}
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white/[0.06] hover:bg-white/[0.12] text-white border border-white/15 px-6 py-4.5 rounded-2xl font-semibold text-sm transition-all duration-200"
+                >
+                  {copiedLink ? (
+                    <>
+                      <Check size={18} className="text-emerald-400" />
+                      <span className="text-emerald-400">Link kopiert!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Share2 size={18} />
+                      <span>Einladungslink teilen</span>
+                    </>
+                  )}
+                </button>
+              </div>
+
             </FadeIn>
           </div>
         </section>
 
       </main>
 
-      {/* --- Footer --- */}
-      <footer className="border-t border-white/10 bg-[#050505] pt-20 pb-10 px-6 relative z-10">
-        <div className="max-w-7xl mx-auto flex flex-col items-center text-center">
 
-          <a href="#" className="flex items-center gap-3 relative z-10 mb-8 grayscale hover:grayscale-0 transition-all duration-500 opacity-80 hover:opacity-100">
-            <div className="w-12 h-12 overflow-hidden rounded-xl border border-white/20">
-              <img src="/kryptokoelsch_logo_new.jpg" alt="Logo" className="w-full h-full object-cover" />
+      {/* ========================================================================= */}
+      {/* 9. FOOTER & LEGAL                                                        */}
+      {/* ========================================================================= */}
+      <footer className="border-t border-white/[0.08] bg-[var(--color-dark-950)] pt-20 pb-12 px-5 md:px-10 relative z-10">
+        <div className="max-w-7xl mx-auto flex flex-col items-center text-center">
+          
+          {/* Logo */}
+          <a href="#" className="flex items-center gap-3 mb-6 group">
+            <div className="w-11 h-11 rounded-xl overflow-hidden border border-white/15 p-1 bg-white/5">
+              <img 
+                src="/kryptokoelsch_logo.png" 
+                onError={(e) => { (e.target as HTMLElement).setAttribute('src', '/kryptokoelsch_logo_new.jpg'); }} 
+                alt="Logo" 
+                className="w-full h-full object-contain" 
+              />
             </div>
-            <span className="font-serif font-bold text-2xl tracking-tight text-white">KryptoKoelsch</span>
+            <span className="font-serif font-bold text-2xl tracking-tight text-white group-hover:text-[var(--color-brand)] transition-colors">
+              KryptoKölsch
+            </span>
           </a>
 
-          <p className="text-white/40 mb-12 max-w-sm font-light">
-            Blockchain, Krypto und Web3 Community im Rheinland.
+          <p className="text-white/50 text-sm mb-8 max-w-md font-light leading-relaxed">
+            Die Blockchain, Krypto und Web3 Community im Rheinland. <br />
+            Meetups, Networking und echter Dialog in Köln.
           </p>
 
-          <div className="flex gap-8 mb-16">
-            <a href="https://chat.whatsapp.com/GSfXAf71lQT0UvW6LRh9wv" target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-[var(--color-brand)] transition-colors">
-              <MessageCircle size={24} />
+          {/* Social Links */}
+          <div className="flex items-center gap-6 mb-12">
+            <a 
+              href="https://chat.whatsapp.com/GSfXAf71lQT0UvW6LRh9wv" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/60 hover:text-[var(--color-brand)] hover:border-[var(--color-brand)]/40 transition-all hover:scale-105"
+              aria-label="WhatsApp Community"
+            >
+              <MessageCircle size={18} />
             </a>
-            <a href="https://luma.com/calendar/cal-By6C0aAuF3FgjeU" target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-[var(--color-brand)] transition-colors">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                <line x1="16" y1="2" x2="16" y2="6"></line>
-                <line x1="8" y1="2" x2="8" y2="6"></line>
-                <line x1="3" y1="10" x2="21" y2="10"></line>
-              </svg>
+
+            <a 
+              href="https://luma.com/calendar/cal-By6C0aAuF3FgjeU" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/60 hover:text-[var(--color-brand)] hover:border-[var(--color-brand)]/40 transition-all hover:scale-105"
+              aria-label="Luma Calendar"
+            >
+              <Calendar size={18} />
             </a>
-            <a href="https://www.linkedin.com/company/kryptokoelsch/" target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-[var(--color-brand)] transition-colors">
-              <Linkedin size={24} />
+
+            <a 
+              href="https://www.linkedin.com/company/kryptokoelsch/" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/60 hover:text-[var(--color-brand)] hover:border-[var(--color-brand)]/40 transition-all hover:scale-105"
+              aria-label="LinkedIn"
+            >
+              <Linkedin size={18} />
             </a>
           </div>
 
-          <div className="w-full h-px bg-white/5 mb-8"></div>
+          <div className="w-full h-px bg-white/[0.06] mb-8"></div>
 
+          {/* Creator Badge: Rheindorf Digital */}
           <div className="mb-8">
             <a href="https://rheindorf.digital" target="_blank" rel="noopener noreferrer" className="badge-rheindorf">
               <span className="badge-rheindorf__inner">
                 <span className="badge-rheindorf__text">
-                  <span className="badge-rheindorf__eyebrow">Made by</span>
+                  <span className="badge-rheindorf__eyebrow">Crafted by</span>
                   <span className="badge-rheindorf__name">rheindorf<span>.digital</span></span>
                 </span>
               </span>
@@ -436,17 +1049,31 @@ export default function App() {
             </a>
           </div>
 
-          <div className="w-full flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-white/30">
-            <p>&copy; {new Date().getFullYear()} KryptoKoelsch. Made in Rheinland.</p>
-            <div className="flex gap-6">
-              <button onClick={() => setShowDatenschutz(true)} className="hover:text-white transition-colors">Datenschutz</button>
-              <button onClick={() => setShowImpressum(true)} className="hover:text-white transition-colors">Impressum</button>
+          {/* Copyright & Legal Links */}
+          <div className="w-full flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-white/40">
+            <p className="flex items-center gap-1.5">
+              <span>&copy; {new Date().getFullYear()} KryptoKölsch. Made with</span>
+              <Heart size={12} className="text-red-500 inline fill-red-500" />
+              <span>in Kölle am Rhing.</span>
+            </p>
+            <div className="flex gap-6 font-medium">
+              <button onClick={() => setShowDatenschutz(true)} className="hover:text-white transition-colors">
+                Datenschutz
+              </button>
+              <button onClick={() => setShowImpressum(true)} className="hover:text-white transition-colors">
+                Impressum
+              </button>
             </div>
           </div>
+
         </div>
       </footer>
 
-      {/* --- Legal Modals --- */}
+
+      {/* ========================================================================= */}
+      {/* 10. LEGAL MODALS (IMPRESSUM & DATENSCHUTZ)                                 */}
+      {/* ========================================================================= */}
+      
       {/* Impressum Modal */}
       <AnimatePresence>
         {showImpressum && (
@@ -454,43 +1081,54 @@ export default function App() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-md flex items-center justify-center p-4 md:p-10"
+            className="fixed inset-0 z-[100] bg-black/85 backdrop-blur-md flex items-center justify-center p-4 md:p-8"
             onClick={() => setShowImpressum(false)}
           >
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="bg-[#111] border border-white/10 rounded-3xl max-w-3xl w-full max-h-[85vh] overflow-y-auto p-8 md:p-12 relative shadow-2xl custom-scrollbar"
+              className="bg-[var(--color-dark-900)] border border-white/15 rounded-3xl max-w-3xl w-full max-h-[85vh] overflow-y-auto p-7 md:p-10 relative shadow-2xl custom-scrollbar"
               onClick={(e) => e.stopPropagation()}
             >
-              <button onClick={() => setShowImpressum(false)} className="absolute top-6 right-6 w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 hover:text-[var(--color-brand)] transition-colors">
-                <X size={20} />
+              <button 
+                onClick={() => setShowImpressum(false)} 
+                className="absolute top-6 right-6 w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 hover:text-[var(--color-brand)] transition-colors"
+                aria-label="Schließen"
+              >
+                <X size={18} />
               </button>
-              <h2 className="text-3xl md:text-4xl font-serif font-bold mb-8 text-white">Impressum</h2>
-              <div className="space-y-8 text-white/60 leading-relaxed font-light">
+              
+              <h2 className="text-3xl font-serif font-bold mb-6 text-white">Impressum</h2>
+              
+              <div className="space-y-6 text-white/70 leading-relaxed font-light text-sm">
                 <div>
-                  <h3 className="font-semibold text-white mb-2 font-serif text-xl">Angaben gemäß § 5 TMG</h3>
+                  <h3 className="font-semibold text-white mb-1.5 font-serif text-lg">Angaben gemäß § 5 TMG</h3>
                   <p>Alexander Rheindorf<br />Pankratiusstraße 31<br />50129 Bergheim</p>
                 </div>
+
                 <div>
-                  <h3 className="font-semibold text-white mb-2 font-serif text-xl">Kontakt</h3>
+                  <h3 className="font-semibold text-white mb-1.5 font-serif text-lg">Kontakt</h3>
                   <p>E-Mail: <a href="mailto:alexander.rheindorf@aachen-blockchain.de" className="text-[var(--color-brand)] hover:underline">alexander.rheindorf@aachen-blockchain.de</a></p>
                 </div>
+
                 <div>
-                  <h3 className="font-semibold text-white mb-2 font-serif text-xl">Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV</h3>
+                  <h3 className="font-semibold text-white mb-1.5 font-serif text-lg">Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV</h3>
                   <p>Alexander Rheindorf<br />Pankratiusstraße 31<br />50129 Bergheim</p>
                 </div>
+
                 <div>
-                  <h3 className="font-semibold text-white mb-2 font-serif text-xl">Haftungsausschluss</h3>
-                  <h4 className="font-medium text-white/80 mb-1 mt-4">Haftung für Inhalte</h4>
-                  <p className="text-sm">Die Inhalte unserer Seiten wurden mit größter Sorgfalt erstellt...</p>
-                  <h4 className="font-medium text-white/80 mb-1 mt-4">Haftung für Links</h4>
-                  <p className="text-sm">Unser Angebot enthält Links zu externen Webseiten Dritter...</p>
+                  <h3 className="font-semibold text-white mb-1.5 font-serif text-lg">Haftungsausschluss</h3>
+                  <h4 className="font-medium text-white/90 mb-1 mt-3">Haftung für Inhalte</h4>
+                  <p className="text-xs text-white/60">Die Inhalte unserer Seiten wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte können wir jedoch keine Gewähr übernehmen.</p>
+                  
+                  <h4 className="font-medium text-white/90 mb-1 mt-3">Haftung für Links</h4>
+                  <p className="text-xs text-white/60">Unser Angebot enthält Links zu externen Webseiten Dritter, auf deren Inhalte wir keinen Einfluss haben. Deshalb können wir für diese fremden Inhalte auch keine Gewähr übernehmen.</p>
                 </div>
+
                 <div>
-                  <h3 className="font-semibold text-white mb-2 font-serif text-xl">Urheberrecht</h3>
-                  <p className="text-sm">Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht...</p>
+                  <h3 className="font-semibold text-white mb-1.5 font-serif text-lg">Urheberrecht</h3>
+                  <p className="text-xs text-white/60">Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers.</p>
                 </div>
               </div>
             </motion.div>
@@ -505,38 +1143,45 @@ export default function App() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-md flex items-center justify-center p-4 md:p-10"
+            className="fixed inset-0 z-[100] bg-black/85 backdrop-blur-md flex items-center justify-center p-4 md:p-8"
             onClick={() => setShowDatenschutz(false)}
           >
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="bg-[#111] border border-white/10 rounded-3xl max-w-3xl w-full max-h-[85vh] overflow-y-auto p-8 md:p-12 relative shadow-2xl custom-scrollbar"
+              className="bg-[var(--color-dark-900)] border border-white/15 rounded-3xl max-w-3xl w-full max-h-[85vh] overflow-y-auto p-7 md:p-10 relative shadow-2xl custom-scrollbar"
               onClick={(e) => e.stopPropagation()}
             >
-              <button onClick={() => setShowDatenschutz(false)} className="absolute top-6 right-6 w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 hover:text-[var(--color-brand)] transition-colors">
-                <X size={20} />
+              <button 
+                onClick={() => setShowDatenschutz(false)} 
+                className="absolute top-6 right-6 w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 hover:text-[var(--color-brand)] transition-colors"
+                aria-label="Schließen"
+              >
+                <X size={18} />
               </button>
-              <h2 className="text-3xl md:text-4xl font-serif font-bold mb-8 text-white">Datenschutzerklärung</h2>
-              <div className="space-y-8 text-white/60 leading-relaxed font-light text-sm">
+
+              <h2 className="text-3xl font-serif font-bold mb-6 text-white">Datenschutzerklärung</h2>
+              
+              <div className="space-y-6 text-white/70 leading-relaxed font-light text-sm">
                 <div>
-                  <h3 className="font-semibold text-white mb-2 font-serif text-xl">1. Datenschutz auf einen Blick</h3>
+                  <h3 className="font-semibold text-white mb-1.5 font-serif text-lg">1. Datenschutz auf einen Blick</h3>
                   <p>Die folgenden Hinweise geben einen einfachen Überblick darüber, was mit Ihren personenbezogenen Daten passiert, wenn Sie diese Website besuchen.</p>
                 </div>
+
                 <div>
-                  <h3 className="font-semibold text-white mb-2 font-serif text-xl">2. Allgemeine Hinweise und Pflichtinformationen</h3>
-                  <p>Die Betreiber dieser Seiten nehmen den Schutz Ihrer persönlichen Daten sehr ernst.</p>
-                  <h4 className="font-medium text-white/80 mb-1 mt-4">Verantwortliche Stelle</h4>
+                  <h3 className="font-semibold text-white mb-1.5 font-serif text-lg">2. Verantwortliche Stelle</h3>
                   <p>Alexander Rheindorf<br />Pankratiusstraße 31<br />50129 Bergheim<br />E-Mail: <a href="mailto:alexander.rheindorf@aachen-blockchain.de" className="text-[var(--color-brand)] hover:underline">alexander.rheindorf@aachen-blockchain.de</a></p>
                 </div>
+
                 <div>
-                  <h3 className="font-semibold text-white mb-2 font-serif text-xl">3. Datenerfassung auf dieser Website</h3>
-                  <p>Der Provider der Seiten (GitHub Pages) erhebt und speichert automatisch Informationen in so genannten Server-Log-Dateien.</p>
+                  <h3 className="font-semibold text-white mb-1.5 font-serif text-lg">3. Datenerfassung auf dieser Website</h3>
+                  <p>Der Provider der Seiten erhebt und speichert automatisch Informationen in Server-Log-Dateien, die Ihr Browser automatisch an uns übermittelt (z.B. Browsertyp, Betriebssystem, Referrer URL, Hostname des zugreifenden Rechners, Uhrzeit der Serveranfrage).</p>
                 </div>
+
                 <div>
-                  <h3 className="font-semibold text-white mb-2 font-serif text-xl">4. Hosting</h3>
-                  <p>Diese Website wird bei GitHub Pages gehostet. Details entnehmen Sie der Datenschutzerklärung von GitHub.</p>
+                  <h3 className="font-semibold text-white mb-1.5 font-serif text-lg">4. Externe Dienste & Verlinkungen</h3>
+                  <p>Unsere Website bindet den Kalender von Luma (lu.ma) per iFrame ein, um Ihnen anstehende Meetup-Termine komfortabel anzuzeigen. Beim Laden dieses Inhalts können Daten an Luma übertragen werden.</p>
                 </div>
               </div>
             </motion.div>

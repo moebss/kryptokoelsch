@@ -1,15 +1,38 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
 @theme {
   --font-serif: "Space Grotesk", sans-serif;
-  --font-sans: "Outfit", sans-serif;
-  --color-brand: #FF9900;
-  --color-brand-light: #FFB84D;
-  --color-sand: #1A1A1A;
-  --color-bg: #0D0D0D;
-  --color-cream: #121212;
-  --color-ink: #F2F2F2;
+  --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: "Outfit", sans-serif;
+  --font-tech: "Space Grotesk", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  --color-brand: #FF9500;
+  --color-brand-light: #FFB340;
+  --color-brand-dark: #D97706;
+  --color-brand-amber: #F59E0B;
+  --color-brand-glow: rgba(255, 149, 0, 0.22);
+
+  --color-dark-950: #07080B;
+  --color-dark-900: #0D0E14;
+  --color-dark-850: #12141C;
+  --color-dark-800: #181A24;
+  --color-dark-700: #222533;
+
+  --color-sand: #16171F;
+  --color-bg: #07080B;
+  --color-cream: #10121A;
+  --color-ink: #F8FAFC;
+  --color-ink-muted: #94A3B8;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
@@ -17,35 +40,168 @@ body {
   background-color: var(--color-bg);
   color: var(--color-ink);
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+  selection-background-color: var(--color-brand);
+  selection-color: #000000;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
 }
 
-/* Custom Utilities */
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #08090D;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-brand);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 9999px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 9999px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--color-brand);
+}
+
+/* Utilities */
 .text-balance {
   text-wrap: balance;
 }
 
-/* Hide scrollbar for carousel */
-.hide-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-.hide-scrollbar {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+.text-pretty {
+  text-wrap: pretty;
 }
 
-/* Infinite Marquee Animation */
+.font-tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Glassmorphism & Borders */
+.glass-panel {
+  background: rgba(18, 20, 28, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-card {
+  background: rgba(18, 20, 28, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card-hover:hover {
+  background: rgba(26, 29, 41, 0.7);
+  border-color: rgba(255, 149, 0, 0.35);
+  transform: translateY(-3px);
+  box-shadow: 0 20px 40px -15px rgba(255, 149, 0, 0.15);
+}
+
+/* Grid & Dots Background */
+.bg-grid-pattern {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+}
+
+.bg-dots-pattern {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Glow Elements */
+.amber-glow {
+  box-shadow: 0 0 50px -10px rgba(255, 149, 0, 0.3);
+}
+
+.amber-glow-strong {
+  box-shadow: 0 0 80px -10px rgba(255, 149, 0, 0.5);
+}
+
+/* Gradient Text */
+.gradient-text-amber {
+  background: linear-gradient(135deg, #FFF6E5 0%, #FFB340 40%, #FF9500 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gradient-text-white {
+  background: linear-gradient(180deg, #FFFFFF 0%, rgba(255, 255, 255, 0.7) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Shimmer Animation */
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+.animate-shimmer {
+  animation: shimmer 2.5s infinite;
+}
+
+/* Infinite Marquee */
 @keyframes marquee {
   0% { transform: translateX(0%); }
   100% { transform: translateX(-50%); }
 }
 
 .animate-marquee {
-  animation: marquee 30s linear infinite;
+  animation: marquee 28s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* Float Animation */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+.animate-float {
+  animation: float 5s ease-in-out infinite;
+}
+
+/* Beer bubbles subtle particle animation */
+@keyframes rise {
+  0% { transform: translateY(0) scale(0.8); opacity: 0; }
+  30% { opacity: 0.8; }
+  70% { opacity: 0.6; }
+  100% { transform: translateY(-80px) scale(1.2); opacity: 0; }
+}
+
+.bubble {
+  position: absolute;
+  background: radial-gradient(circle, rgba(255, 180, 50, 0.7) 0%, rgba(255, 149, 0, 0) 70%);
+  border-radius: 50%;
+  animation: rise 3s infinite ease-in;
+  pointer-events: none;
 }
 
 /* Badge rheindorf.digital */
@@ -69,25 +225,23 @@ h1, h2, h3, h4, h5, h6 {
   padding: 8px 16px;
   border: 1px solid rgba(255,255,255,0.12);
   border-right: none;
-  background: rgba(0,0,0,0.35);
+  background: rgba(15,17,23,0.7);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  border-radius: 6px 0 0 6px;
+  border-radius: 8px 0 0 8px;
   position: relative;
   overflow: hidden;
   transition: border-color 0.35s, background 0.35s;
 }
 
-/* Leuchtender "Scan"-Effekt beim Hover */
 .badge-rheindorf__inner::before {
   content: '';
   position: absolute;
   top: 0; left: -100%; width: 55%; height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(0,255,102,0.12), transparent);
+  background: linear-gradient(90deg, transparent, rgba(0,255,102,0.15), transparent);
   transition: left 0.55s ease;
 }
 
-/* Retro Scanline-Overlay */
 .badge-rheindorf__inner::after {
   content: '';
   position: absolute; inset: 0;
@@ -96,8 +250,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .badge-rheindorf:hover .badge-rheindorf__inner {
-  border-color: rgba(255,255,255,0.22);
-  background: rgba(0,0,0,0.5);
+  border-color: rgba(255,255,255,0.25);
+  background: rgba(20,23,32,0.85);
 }
 
 .badge-rheindorf:hover .badge-rheindorf__inner::before {
@@ -109,36 +263,34 @@ h1, h2, h3, h4, h5, h6 {
 .badge-rheindorf__eyebrow {
   display: block;
   font-size: 9px;
-  color: rgba(255,255,255,0.4);
+  color: rgba(255,255,255,0.45);
   letter-spacing: 2.5px;
   text-transform: uppercase;
   margin-bottom: 2px;
   font-weight: 500;
-  font-family: sans-serif;
+  font-family: var(--font-sans);
 }
 
 .badge-rheindorf__name {
   display: block;
   font-size: 13px;
-  color: rgba(255,255,255,0.9);
+  color: rgba(255,255,255,0.95);
   font-weight: 700;
   letter-spacing: 0.5px;
-  font-family: sans-serif;
+  font-family: var(--font-sans);
 }
 
-/* Das grüne Highlight für ".digital" */
 .badge-rheindorf__name span { color: #00ff66; }
 
-/* Pfeil-Abschluss (Tip) rechte Seite */
 .badge-rheindorf__tip {
   width: 0; height: 0;
   border-top: 19px solid transparent;
   border-bottom: 19px solid transparent;
-  border-left: 10px solid rgba(0,0,0,0.35);
+  border-left: 10px solid rgba(15,17,23,0.7);
   transition: border-left-color 0.35s;
   flex-shrink: 0;
 }
 
 .badge-rheindorf:hover .badge-rheindorf__tip {
-  border-left-color: rgba(0,0,0,0.5);
+  border-left-color: rgba(20,23,32,0.85);
 }
